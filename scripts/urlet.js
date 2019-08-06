@@ -8,34 +8,34 @@ var urlet_menu_choices = {"style":false, "script":false, "template":false, "comm
 function urlet_menu() {
     // Add style
     var modal_style = document.createElement("style");
-    modal_style.innerHTML = ".modal { display: none; position: fixed; z-index: 1; padding-top: 100px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4); } .modal-content { background-color: #fefefe; margin: auto; padding: 20px; border: 1px solid #888; width: 80%; } .close { color: #aaaaaa; float: right; font-size: 28px; font-weight: bold; padding-left: 20px; } .close:hover, .close:focus { color: #000; text-decoration: none; cursor: pointer; }";
+    modal_style.innerHTML = ".urlet-modal { all: initial; display: none; position: fixed; z-index: 1; padding-top: 100px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4); } .urlet-modal-content { background-color: #fefefe; margin: auto; padding: 20px; border: 1px solid #888; width: 80%; } .urlet-close { color: #aaaaaa; float: right; font-size: 28px; font-weight: bold; padding-left: 20px; } .urlet-close:hover, .urlet-close:focus { color: #000; text-decoration: none; cursor: pointer; }";
     modal_style.setAttribute("id", "urlet-item");
     document.getElementsByTagName("head")[0].appendChild(modal_style);
     // Add menu items
     var urlet_modal = document.createElement("div");
     urlet_modal.setAttribute("id", "urlet_modal");
-    urlet_modal.setAttribute("class", "modal");
+    urlet_modal.setAttribute("class", "urlet-modal");
     document.getElementsByTagName("body")[0].appendChild(urlet_modal);
     var modal_content = document.createElement("div");
-    modal_content.setAttribute("class", "modal-content");
+    modal_content.setAttribute("class", "urlet-modal-content");
     // Create form
-    modal_content.innerHTML = "<span class='close'>&times;</span><form name='popup_form' onsubmit='return urlet_main();'><fieldset><legend>Would you like to include these?</legend><p><input type='checkbox' name='style' value='true' id='c_b_style'> Style</p><p><input type='checkbox' name='script' value='true' id='c_b_script'> Script</p><p><input type='checkbox' name='template' value='true' id='c_b_template'> Template</p><p><input type='checkbox' name='comment' value='true' id='c_b_comment'> Comment</p><p><input type='submit' /></p></fieldset></form>";
+    modal_content.innerHTML = "<span class='urlet-close'>&times;</span><form name='urlet_popup_form' onsubmit='return urlet_main();'><fieldset><legend>Would you like to include these?</legend><p><input type='checkbox' name='style' value='true' id='c_b_style'> Style</p><p><input type='checkbox' name='script' value='true' id='c_b_script'> Script</p><p><input type='checkbox' name='template' value='true' id='c_b_template'> Template</p><p><input type='checkbox' name='comment' value='true' id='c_b_comment'> Comment</p><p><input type='submit' /></p></fieldset></form>";
     urlet_modal.appendChild(modal_content);
     // Add menu script
     var modal_script = document.createElement("script");
-    modal_script.innerHTML = "var urlet_modal = document.getElementById('urlet_modal');\nvar span_close = document.getElementsByClassName('close')[0];\nurlet_modal.style.display = 'block';\nspan_close.onclick = function() {\nurlet_modal.style.display = 'none';\nlocation.reload(false);\n}\nwindow.onclick = function(event) {\nif (event.target == urlet_modal) {\nurlet_modal.style.display = 'none';\nlocation.reload(false);\n}\n}\nc_b_style.onclick = function() {\nif(urlet_menu_choices.style) urlet_menu_choices.style = false;\nelse urlet_menu_choices.style = true;\n}\nc_b_script.onclick = function() {\nif(urlet_menu_choices.script) urlet_menu_choices.script = false;\nelse urlet_menu_choices.script = true;\n}\nc_b_template.onclick = function() {\nif(urlet_menu_choices.template) urlet_menu_choices.template = false;\nelse urlet_menu_choices.template = true;\n}\nc_b_comment.onclick = function() {\nif(urlet_menu_choices.comment) urlet_menu_choices.comment = false;\nelse urlet_menu_choices.comment = true;\n}\n";
+    modal_script.innerHTML = "var urlet_modal = document.getElementById('urlet_modal');\nvar urlet_span_close = document.getElementsByClassName('urlet-close')[0];\nurlet_modal.style.display = 'block';\nurlet_span_close.onclick = function() {\nurlet_modal.style.display = 'none';\nlocation.reload(false);\n}\nwindow.onclick = function(event) {\nif (event.target == urlet_modal) {\nurlet_modal.style.display = 'none';\nlocation.reload(false);\n}\n}\nc_b_style.onclick = function() {\nif(urlet_menu_choices.style) urlet_menu_choices.style = false;\nelse urlet_menu_choices.style = true;\n}\nc_b_script.onclick = function() {\nif(urlet_menu_choices.script) urlet_menu_choices.script = false;\nelse urlet_menu_choices.script = true;\n}\nc_b_template.onclick = function() {\nif(urlet_menu_choices.template) urlet_menu_choices.template = false;\nelse urlet_menu_choices.template = true;\n}\nc_b_comment.onclick = function() {\nif(urlet_menu_choices.comment) urlet_menu_choices.comment = false;\nelse urlet_menu_choices.comment = true;\n}\n";
     modal_script.setAttribute("id", "urlet-item");
     document.getElementsByTagName("head")[0].appendChild(modal_script);
     // Add lz-string-1.4.4.js
-    var lz_script = document.createElement('script');
-    lz_script.setAttribute('type', 'text/javascript');
-    lz_script.setAttribute('src', urlet_url + 'scripts/lz-string-1.4.4.js');
+    var lz_script = document.createElement("script");
+    lz_script.setAttribute("type", "text/javascript");
+    lz_script.setAttribute("src", urlet_url + "scripts/lz-string-1.4.4.js");
     lz_script.setAttribute("id", "urlet-item");
     document.getElementsByTagName("head")[0].appendChild(lz_script);
     // Add himalaya.js
-    var himalaya = document.createElement('script');
-    himalaya.setAttribute('type', 'text/javascript');
-    himalaya.setAttribute('src', urlet_url + 'scripts/himalaya.js');
+    var himalaya = document.createElement("script");
+    himalaya.setAttribute("type", "text/javascript");
+    himalaya.setAttribute("src", urlet_url + "scripts/himalaya.js");
     himalaya.setAttribute("id", "urlet-item");
     document.getElementsByTagName("head")[0].appendChild(himalaya);
 }
