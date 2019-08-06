@@ -1,7 +1,10 @@
 # urlet
 
 A bookmarklet for compressing the entire content of a webpage into a URL.
+
 You can also remove style, script, template elements and comments from the page simply from the menu.
+
+[Click here to get it!](https://benja-johnny.github.io/urlet/bookmarklet/)
 
 
 ## Special Thanks
