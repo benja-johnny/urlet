@@ -1,8 +1,8 @@
 // Urlet URL
-const urlet_url = 'https://benja-johnny.github.io/urlet/';
+const URLET_URL = 'https://benja-johnny.github.io/urlet/';
 
 // Menu choices, needs to be global
-var urlet_menu_choices = {"style":false, "script":false, "template":false, "comment":false};
+var URLET_MENU_CHOICES = {"style":false, "script":false, "template":false, "comment":false};
 
 // Adds the modal menu to the page
 function urlet_menu() {
@@ -29,32 +29,34 @@ function urlet_menu() {
     // Create form in iframe
     var modal_content = document.createElement("div");
     modal_content.setAttribute("class", "urlet-modal-content");
-    modal_content.innerHTML = "<span class='urlet-close'>&times;</span><form name='urlet_popup_form' onsubmit='return window.parent.urlet_main();'><fieldset><legend>Would you like to include these?</legend><p><input type='checkbox' name='style' value='true' id='c_b_style'> Style</p><p><input type='checkbox' name='script' value='true' id='c_b_script'> Script</p><p><input type='checkbox' name='template' value='true' id='c_b_template'> Template</p><p><input type='checkbox' name='comment' value='true' id='c_b_comment'> Comment</p><p><input type='submit' /></p></fieldset></form>";
+    modal_content.innerHTML = "<span class='urlet-close'>&times;</span><form name='urlet_popup_form' onsubmit='return window.parent.urlet_main();'><fieldset><legend>Including these will make the link longer</legend><p><input type='checkbox' name='style' value='true' id='c_b_style'> Style</p><p><input type='checkbox' name='script' value='true' id='c_b_script'> Script</p><p><input type='checkbox' name='template' value='true' id='c_b_template'> Template</p><p><input type='checkbox' name='comment' value='true' id='c_b_comment'> Comment</p><p><input type='submit' /></p></fieldset></form>";
     urlet_modal.contentDocument.getElementsByTagName("body")[0].appendChild(modal_content);
     
     // Add menu script to iframe
     var modal_script = document.createElement("script");
-    modal_script.innerHTML = "var urlet_modal = window.parent.document.getElementById('urlet_modal');\nvar urlet_span_close = document.getElementsByClassName('urlet-close')[0];\nurlet_span_close.onclick = function() {\nurlet_modal.style.display = 'none';\nwindow.parent.location.reload(false);\n}\nwindow.parent.onclick = function(event) {\nif (event.target == urlet_modal) {\nurlet_modal.style.display = 'none';\nwindow.parent.location.reload(false);\n}\n}\nc_b_style.onclick = function() {\nif(window.parent.urlet_menu_choices.style) window.parent.urlet_menu_choices.style = false;\nelse window.parent.urlet_menu_choices.style = true;\n}\nc_b_script.onclick = function() {\nif(window.parent.urlet_menu_choices.script) window.parent.urlet_menu_choices.script = false;\nelse window.parent.urlet_menu_choices.script = true;\n}\nc_b_template.onclick = function() {\nif(window.parent.urlet_menu_choices.template) window.parent.urlet_menu_choices.template = false;\nelse window.parent.urlet_menu_choices.template = true;\n}\nc_b_comment.onclick = function() {\nif(window.parent.urlet_menu_choices.comment) window.parent.urlet_menu_choices.comment = false;\nelse window.parent.urlet_menu_choices.comment = true;\n}\n";
+    modal_script.innerHTML = "var urlet_modal = window.parent.document.getElementById('urlet_modal');\nvar urlet_span_close = document.getElementsByClassName('urlet-close')[0];\nurlet_span_close.onclick = function() {\nurlet_modal.style.display = 'none';\nwindow.parent.location.reload(false);\n}\nwindow.parent.onclick = function(event) {\nif (event.target == urlet_modal) {\nurlet_modal.style.display = 'none';\nwindow.parent.location.reload(false);\n}\n}\nc_b_style.onclick = function() {\nif(window.parent.URLET_MENU_CHOICES.style) window.parent.URLET_MENU_CHOICES.style = false;\nelse window.parent.URLET_MENU_CHOICES.style = true;\n}\nc_b_script.onclick = function() {\nif(window.parent.URLET_MENU_CHOICES.script) window.parent.URLET_MENU_CHOICES.script = false;\nelse window.parent.URLET_MENU_CHOICES.script = true;\n}\nc_b_template.onclick = function() {\nif(window.parent.URLET_MENU_CHOICES.template) window.parent.URLET_MENU_CHOICES.template = false;\nelse window.parent.URLET_MENU_CHOICES.template = true;\n}\nc_b_comment.onclick = function() {\nif(window.parent.URLET_MENU_CHOICES.comment) window.parent.URLET_MENU_CHOICES.comment = false;\nelse window.parent.URLET_MENU_CHOICES.comment = true;\n}\n";
     modal_script.setAttribute("id", "urlet-item");
     urlet_modal.contentDocument.getElementsByTagName("head")[0].appendChild(modal_script);
     
     // Add lz-string-1.4.4.js
     var lz_script = document.createElement("script");
     lz_script.setAttribute("type", "text/javascript");
-    lz_script.setAttribute("src", urlet_url + "scripts/lz-string-1.4.4.js");
+    lz_script.setAttribute("src", URLET_URL + "scripts/lz-string-1.4.4.js");
     lz_script.setAttribute("id", "urlet-item");
     document.getElementsByTagName("head")[0].appendChild(lz_script);
     
     // Add himalaya.js
     var himalaya = document.createElement("script");
     himalaya.setAttribute("type", "text/javascript");
-    himalaya.setAttribute("src", urlet_url + "scripts/himalaya.js");
+    himalaya.setAttribute("src", URLET_URL + "scripts/himalaya.js");
     himalaya.setAttribute("id", "urlet-item");
     document.getElementsByTagName("head")[0].appendChild(himalaya);
 }
 
 // Main function, triggered by submit button
 function urlet_main() {
+    var stylesheet_link = "";
+    
     // Hide modal
     var urlet_modal = document.getElementById("urlet_modal");
     urlet_modal.style.display = "none";
@@ -64,6 +66,7 @@ function urlet_main() {
         var cleaned_html = data;
         var clear_next = false;
         var clear_children = false;
+        var stylesheet_next = false;
         
         // Iterate through (nested) data
         function it(d) {
@@ -76,11 +79,17 @@ function urlet_main() {
                     clear_next = true;
                     clear_children = true;
                 }
+                // Save stylesheet
+                if(URLET_MENU_CHOICES.style && (d[i].value == "stylesheet")) stylesheet_next = true;
+                if(stylesheet_next && (d[i].key == "href")) {
+                    stylesheet_next = false;
+                    stylesheet_link = d[i].value;
+                }
                 // Menu switches
-                if(!urlet_menu_choices.style && (d[i].tagName == "style")) clear_next = true;
-                if(!urlet_menu_choices.script && (d[i].tagName == "script")) clear_next = true;
-                if(!urlet_menu_choices.template && (d[i].tagName == "template")) clear_children = true;
-                if(!urlet_menu_choices.comment && (d[i].type == "comment")) d[i].content = "";
+                if(!URLET_MENU_CHOICES.style && (d[i].tagName == "style")) clear_next = true;
+                if(!URLET_MENU_CHOICES.script && (d[i].tagName == "script")) clear_next = true;
+                if(!URLET_MENU_CHOICES.template && (d[i].tagName == "template")) clear_children = true;
+                if(!URLET_MENU_CHOICES.comment && (d[i].type == "comment")) d[i].content = "";
                 
                 // If the next text element's getting cleared
                 if(clear_next && (d[i].type == "text")) {
@@ -99,16 +108,41 @@ function urlet_main() {
         it(data);
         return cleaned_html;
     }
+    // Fetch function for stylesheet
+    function fetchStylesheet(url, callback) {
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", url, false);
+        xmlhttp.onreadystatechange = function() {
+            if(xmlhttp.readyState == 4 && xmlhttp.status == 200)
+                callback(xmlhttp.responseText);
+        }
+        xmlhttp.send();
+    }
+    // Add linked stylesheet to <head>
+    function insertStylesheet(d) {
+        var r = "";
+        if(!URLET_MENU_CHOICES.style) r = d;
+        else {
+            var i = d.indexOf("<head>") + 6;
+            var s = "";
+            fetchStylesheet(stylesheet_link, function(response) {
+                s = response;
+            });
+            r = d.slice(0, i) + "\n<style>\n" + s + "\n</style>\n" + d.slice(i);
+        }
+        return r;
+    }
     // Convert page
     var encoded_page =
         LZString144.compressToBase64(
+        insertStylesheet(
         window.himalaya.stringify(
         cleanHTML(
         window.himalaya.parse(
-        document.documentElement.outerHTML))));
+        document.documentElement.outerHTML)))));
     
     // Load the encoded page in new window
-    window.open(urlet_url + "#" + encoded_page);
+    window.open(URLET_URL + "#" + encoded_page);
     
     // Reload page from cache
     location.reload(false);
