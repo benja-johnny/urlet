@@ -9,7 +9,7 @@ function urlet_menu() {
 
     // Add modal style
     var modal_style = document.createElement("style");
-    modal_style.innerHTML = ".urlet-modal { display: none; position: fixed; z-index: 1; padding-top: 100px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4); }";
+    modal_style.innerHTML = ".urlet-modal { display: none; position: fixed; z-index: 2147483647; padding-top: 100px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4); }";
     modal_style.setAttribute("id", "urlet-item");
     document.getElementsByTagName("head")[0].appendChild(modal_style);
     
