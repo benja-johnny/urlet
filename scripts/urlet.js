@@ -92,20 +92,26 @@ function urlet_main() {
             // Put links of .css and .js files into an array
             var style_hrefs = [];
             var script_hrefs = [];
+      
             var s_hrefs = $.grep(
                 $("link").map((i, el) => $(el).attr("href")),
                 (n, i) => n.match(/\.(css|js)(?=[?#])|(\.)(css|js)$/gmi));
+      
             s_hrefs.forEach(
                 i => i.match(/\.(js)(?=[?#])|(\.)(js)$/gmi) ?
                 script_hrefs.push(i) : style_hrefs.push(i));
       
             // Fetch files
-            if(URLET_MENU_CHOICES.style)
+            function fetchFiles(s) {
                 style_hrefs.forEach(link =>
-                $(document.createElement("style")).appendTo("head").load(link));
+                    $(document.createElement(s))
+                    .appendTo("head").load(link));
+            }
+      
+            if(URLET_MENU_CHOICES.style)
+                fetchFiles("style");
             if(URLET_MENU_CHOICES.script)
-                script_hrefs.forEach(link =>
-                $(document.createElement("script")).appendTo("head").load(link));
+                fetchFiles("script");
         }
       
         // Remove links
@@ -123,19 +129,24 @@ function urlet_main() {
         // Remove urlet code
         $("#urlet_modal, #urlet-item").remove();
       
-        // Convert page
-        var encoded_page =
-            LZString144.compressToBase64(
-            document.documentElement.outerHTML);
-    
-        // Load the encoded page in new window
-        window.open(URLET_URL + "#" + encoded_page);
+        // Wait for fetched content
+        setTimeout(function() {
+        
+            // Convert page
+            var encoded_page =
+                LZString144.compressToBase64(
+                document.documentElement.outerHTML);
+        
+            // Load the encoded page in new window
+            window.open(URLET_URL + "#" + encoded_page);
+          
+            // Reload page from cache
+            location.reload(false);
+            
+        }, 900);
     });
     
-    // Reload page from cache
-    location.reload(false);
-    
-    // Submit button doesn't need to do anything
+    // Submit button doesn't need to submit anything
     return false;
 }
 
