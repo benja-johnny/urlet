@@ -64,11 +64,12 @@ function urlet_menu() {
 // Main function, triggered by submit button
 function urlet_main() {
 
-    // Hide menu
-    document.getElementById("urlet_modal").style.display = "none";
-
     // Execute after page has loaded
     $(function() {
+    
+        // Display message
+        var form_inner = "<form name='urlet_popup_form' onsubmit=''><fieldset><legend>Please wait...</legend><p><textarea id='t_area' rows='10' cols='50'>Link will appear here</textarea></p></fieldset></form>";
+        $("#urlet_modal").contents().find("form").html(form_inner);
     
         // Remove metadata
         if(!URLET_MENU_CHOICES.meta)
@@ -118,30 +119,34 @@ function urlet_main() {
         if(!URLET_MENU_CHOICES.link)
             $("link").remove();
       
-        // Remove scripts
-        if(!URLET_MENU_CHOICES.script)
-            $("script").remove();
-      
-        // Remove style
-        if(!URLET_MENU_CHOICES.style)
-            $("style").remove();
-      
-        // Remove urlet code
-        $("#urlet_modal, #urlet-item").remove();
-      
         // Wait for fetched content
         setTimeout(function() {
         
+            // Remove scripts
+            if(!URLET_MENU_CHOICES.script)
+                $("script").remove();
+          
+            // Remove style
+            if(!URLET_MENU_CHOICES.style)
+                $("style").remove();
+        
+            // Remove urlet code
+            $("#urlet_modal, #urlet-item").remove();
+            
             // Convert page
             var encoded_page =
                 LZString144.compressToBase64(
                 document.documentElement.outerHTML);
+                
+            // Add menu back to display message
+            urlet_menu();
         
-            // Load the encoded page in new window
-            window.open(URLET_URL + "#" + encoded_page);
-          
-            // Reload page from cache
-            location.reload(false);
+            // Show encoded page link in textarea
+            var $form_contents = $("#urlet_modal").contents();
+            
+            $form_contents.find("form").html(form_inner);
+            $form_contents.find("legend").text("Link ready");
+            $form_contents.find("#t_area").val(URLET_URL + "#" + encoded_page);
             
         }, 900);
     });
