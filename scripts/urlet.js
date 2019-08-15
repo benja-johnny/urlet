@@ -68,7 +68,8 @@ function urlet_main() {
     $(function() {
     
         // Display message
-        var form_inner = "<form name='urlet_popup_form' onsubmit=''><fieldset><legend>Please wait...</legend><p><textarea id='t_area' rows='10' cols='50'>Link will appear here</textarea></p></fieldset></form>";
+        var form_inner = "<form name='urlet_popup_form' onsubmit=''><fieldset><legend>Please wait...</legend><p><textarea id='t_area' rows='10' cols='50'>Link will appear here</textarea></p><p id='len'>Length: Loading...</p></fieldset></form>";
+        
         $("#urlet_modal").contents().find("form").html(form_inner);
     
         // Remove metadata
@@ -143,10 +144,12 @@ function urlet_main() {
         
             // Show encoded page link in textarea
             var $form_contents = $("#urlet_modal").contents();
+            var u_link = URLET_URL + "#" + encoded_page;
             
             $form_contents.find("form").html(form_inner);
             $form_contents.find("legend").text("Link ready");
-            $form_contents.find("#t_area").val(URLET_URL + "#" + encoded_page);
+            $form_contents.find("#t_area").val(u_link);
+            $form_contents.find("#len").text("Length: " + u_link.length);
             
         }, 900);
     });
