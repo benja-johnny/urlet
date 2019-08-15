@@ -69,7 +69,7 @@ function urlet_main() {
     
         // Display message
         var form_inner = "<form name='urlet_popup_form' onsubmit=''><fieldset><legend>Please wait...</legend><p><textarea id='t_area' rows='10' cols='50'>Link will appear here</textarea></p><p id='len'>Length: Loading...</p></fieldset></form>";
-        
+      
         $("#urlet_modal").contents().find("form").html(form_inner);
     
         // Remove metadata
@@ -145,11 +145,21 @@ function urlet_main() {
             // Show encoded page link in textarea
             var $form_contents = $("#urlet_modal").contents();
             var u_link = URLET_URL + "#" + encoded_page;
+            var u_len = u_link.length;
             
             $form_contents.find("form").html(form_inner);
             $form_contents.find("legend").text("Link ready");
             $form_contents.find("#t_area").val(u_link);
-            $form_contents.find("#len").text("Length: " + u_link.length);
+            
+            // Show link length with colors
+            var u_col = "green";
+            
+            if(u_len >= 2047) u_col = "orange";
+            if(u_len >= 8192) u_col = "darkorange";
+            if(u_len >= 32779) u_col = "orangered";
+            if(u_len >= 64000) u_col = "red";
+                
+            $form_contents.find("#len").html(`Length: <font color=${u_col}>${u_len}</font>`);
             
         }, 900);
     });
