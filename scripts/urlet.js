@@ -1,9 +1,6 @@
 // Urlet URL
 const URLET_URL = 'https://benja-johnny.github.io/urlet/';
 
-// Menu choices
-var URLET_MENU_CHOICES = {"style":false, "script":false, "link":false, "meta":false, "template":false, "comment":false};
-
 // Adds the modal menu and scripts to the page
 function urlet_menu() {
 
@@ -29,12 +26,12 @@ function urlet_menu() {
     // Create form in iframe
     const modal_content = document.createElement("div");
     modal_content.setAttribute("class", "urlet-modal-content");
-    modal_content.innerHTML = "<span class='urlet-close'>&times;</span><form name='urlet_popup_form' onsubmit='return window.parent.urlet_main();'><fieldset><legend>Urlet - Options</legend><table style='width:100%;padding:5px;text-align:left'><tr><th>Include</th><th>Compression</th></tr><tr><td><input type='checkbox' name='style' value='true' id='c_b_style'> Style</td><td><input type='radio' name='compression' value='lz_string' id='c_b_lz_script'  checked='checked'> lz-string</td></tr><tr><td><input type='checkbox' name='script' value='true' id='c_b_script'> Script</td><td><input type='radio' name='compression' value='base_64' id='c_b_base_64'> base-64</td></tr><tr><td><input type='checkbox' name='link' value='true' id='c_b_link'> Link</td></tr><tr><td><input type='checkbox' name='meta' value='true' id='c_b_meta'> Meta</td></tr><tr><td><input type='checkbox' name='template' value='true' id='c_b_template'> Template</td></tr><tr><td><input type='checkbox' name='comment' value='true' id='c_b_comment'> Comment</td></tr></table><p style='padding-left:5px'><input type='submit' /></p></fieldset></form>";
+    modal_content.innerHTML = "<span class='urlet-close'>&times;</span><form name='urlet_popup_form' onsubmit='return window.parent.urlet_main();'><fieldset><legend>Urlet - Options</legend><table style='width:100%;padding:5px;text-align:left'><tr><th>Include</th><th>Compression</th></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_style'> Style</td><td><input type='radio' name='compression' value='lz_string' id='c_b_lz_script'  checked='checked'> lz-string</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_script'> Script</td><td><input type='radio' name='compression' value='base_64' id='c_b_base_64'> base-64</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_link'> Link</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_meta'> Meta</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_template'> Template</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_comment'> Comment</td></tr><tr><td style='padding-top:10px'><input type='checkbox' onClick='u_select_all(this)' /> Select all</td></tr></table><p style='padding-left:5px'><input type='submit' /></p></fieldset></form>";
     urlet_modal.contentDocument.getElementsByTagName("body")[0].appendChild(modal_content);
     
     // Add menu script to iframe
     const modal_script = document.createElement("script");
-    modal_script.innerHTML = "var urlet_modal=window.parent.document.getElementById('urlet_modal');\nvar urlet_span_close=document.getElementsByClassName('urlet-close')[0];\nurlet_span_close.onclick=function(){\nurlet_modal.style.display='none';\nwindow.parent.location.reload(false);\n}\nwindow.parent.onclick=function(event){\nif(event.target==urlet_modal){\nurlet_modal.style.display='none';\nwindow.parent.location.reload(false);\n}\n}\nc_b_style.onclick=function(){\nif(window.parent.URLET_MENU_CHOICES.style)window.parent.URLET_MENU_CHOICES.style=false;\nelse window.parent.URLET_MENU_CHOICES.style=true;\n}\nc_b_script.onclick=function(){\nif(window.parent.URLET_MENU_CHOICES.script)window.parent.URLET_MENU_CHOICES.script=false;\nelse window.parent.URLET_MENU_CHOICES.script=true;\n}\nc_b_link.onclick=function(){\nif(window.parent.URLET_MENU_CHOICES.link)window.parent.URLET_MENU_CHOICES.link=false;\nelse window.parent.URLET_MENU_CHOICES.link=true;\n}\nc_b_meta.onclick=function(){\nif(window.parent.URLET_MENU_CHOICES.meta)window.parent.URLET_MENU_CHOICES.meta=false;\nelse window.parent.URLET_MENU_CHOICES.meta=true;\n}\nc_b_template.onclick=function(){\nif(window.parent.URLET_MENU_CHOICES.template)window.parent.URLET_MENU_CHOICES.template=false;\nelse window.parent.URLET_MENU_CHOICES.template=true;\n}\nc_b_comment.onclick=function(){\nif(window.parent.URLET_MENU_CHOICES.comment)window.parent.URLET_MENU_CHOICES.comment=false;\nelse window.parent.URLET_MENU_CHOICES.comment=true;\n}\n";
+    modal_script.innerHTML = "var urlet_modal=window.parent.document.getElementById('urlet_modal');\nvar urlet_span_close=document.getElementsByClassName('urlet-close')[0];\nurlet_span_close.onclick=function(){\nurlet_modal.style.display='none';\nwindow.parent.location.reload(false);\n}\nwindow.parent.onclick=function(event){\nif(event.target==urlet_modal){\nurlet_modal.style.display='none';\nwindow.parent.location.reload(false);\n}\n}\nfunction u_select_all(source){\nu_checkboxes=document.getElementsByName('urlet_checkbox');\nfor(var i=0,n=u_checkboxes.length;i<n;i++){\nu_checkboxes[i].checked=source.checked;\n}\n}";
     modal_script.setAttribute("id", "urlet-item");
     urlet_modal.contentDocument.getElementsByTagName("head")[0].appendChild(modal_script);
     
@@ -68,6 +65,16 @@ function urlet_main() {
     $(function() {
     
         const $modal_contents = $("#urlet_modal").contents();
+      
+        // Get menu choices
+        var urlet_menu_choices = {
+            "style":    $modal_contents.find("input[id=c_b_style]").prop("checked"),
+            "script":   $modal_contents.find("input[id=c_b_script]").prop("checked"),
+            "link":     $modal_contents.find("input[id=c_b_link]").prop("checked"),
+            "meta":     $modal_contents.find("input[id=c_b_meta]").prop("checked"),
+            "template": $modal_contents.find("input[id=c_b_template]").prop("checked"),
+            "comment":  $modal_contents.find("input[id=c_b_comment]").prop("checked")
+        };
     
         // Get selected compression
         const compr = $modal_contents.find("input[type=radio][name=compression]:checked").val();
@@ -78,11 +85,11 @@ function urlet_main() {
         $modal_contents.find("form").html(form_inner);
     
         // Remove metadata
-        if(!URLET_MENU_CHOICES.meta)
+        if(!urlet_menu_choices.meta)
             $("meta").remove();
       
         // Remove comments
-        if(!URLET_MENU_CHOICES.comment)
+        if(!urlet_menu_choices.comment)
             $('*').contents().each(function() {
                 if(this.nodeType === Node.COMMENT_NODE) {
                     $(this).remove();
@@ -90,11 +97,11 @@ function urlet_main() {
             });
       
         // Remove templates
-        if(!URLET_MENU_CHOICES.template)
+        if(!urlet_menu_choices.template)
             $("template").remove();
     
         // If the user wants to preserve style/script
-        if(URLET_MENU_CHOICES.style || URLET_MENU_CHOICES.script) {
+        if(urlet_menu_choices.style || urlet_menu_choices.script) {
       
             // Put links of .css and .js files into an array
             var style_hrefs = [];
@@ -115,25 +122,25 @@ function urlet_main() {
                     .appendTo("head").load(link));
             }
       
-            if(URLET_MENU_CHOICES.style)
+            if(urlet_menu_choices.style)
                 fetchFiles("style");
-            if(URLET_MENU_CHOICES.script)
+            if(urlet_menu_choices.script)
                 fetchFiles("script");
         }
       
         // Remove links
-        if(!URLET_MENU_CHOICES.link)
+        if(!urlet_menu_choices.link)
             $("link").remove();
       
         // Wait for fetched content
         setTimeout(function() {
         
             // Remove scripts
-            if(!URLET_MENU_CHOICES.script)
+            if(!urlet_menu_choices.script)
                 $("script").remove();
           
             // Remove style
-            if(!URLET_MENU_CHOICES.style)
+            if(!urlet_menu_choices.style)
                 $("style").remove();
         
             // Remove urlet code
