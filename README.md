@@ -10,7 +10,7 @@ A bookmarklet for compressing the entire content of a webpage into a URL.
 It may crash your browser!
 
 
-## Bugs
+## Bugs, Limitations
 
 Many.
 
