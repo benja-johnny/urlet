@@ -20,12 +20,12 @@ if(wlh) {
     // Print value of "html" to the page
     if(compr_t == 0) {
         document.write(
-        // Decode base-64
-        window.atob(wlhs));
+        decodeURIComponent(
+        window.atob(wlhs)));
     }
+    
     if(compr_t == 1) {
         document.write(
-        // Decode lz-string
         LZString144.decompressFromBase64(wlhs));
     }
 }
