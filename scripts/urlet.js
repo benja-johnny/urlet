@@ -26,7 +26,7 @@ function urlet_menu() {
     // Create form in iframe
     const modal_content = document.createElement("div");
     modal_content.setAttribute("class", "urlet-modal-content");
-    modal_content.innerHTML = "<span class='urlet-close'>&times;</span><form name='urlet_popup_form' onsubmit='return window.parent.urlet_main();'><fieldset><legend>Urlet - Options</legend><table style='width:100%;padding:5px;text-align:left'><tr><th>Include</th><th>Compression</th></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_style'> Style</td><td><input type='radio' name='compression' value='lz_string' id='c_b_lz_script'  checked='checked'> lz-string</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_script'> Script</td><td><input type='radio' name='compression' value='base_64' id='c_b_base_64'> base-64</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_link'> Link</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_meta'> Meta</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_template'> Template</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_comment'> Comment</td></tr><tr><td style='padding-top:10px'><input type='checkbox' onClick='u_select_all(this)' /> Select all</td></tr></table><p style='padding-left:5px'><input type='submit' /></p></fieldset></form>";
+    modal_content.innerHTML = "<span class='urlet-close'>&times;</span><form name='urlet_popup_form' onsubmit='return window.parent.urlet_main();'><fieldset><legend>Urlet - Options</legend><table style='width:100%;padding:5px;text-align:left'><tr><th style='padding-bottom:10px'>Include</th><th style='padding-bottom:10px'>Compression</th></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_style'> Style</td><td><input type='radio' name='compression' value='lz_string' id='c_b_lz_script'  checked='checked'> lz-string</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_script'> Script</td><td><input type='radio' name='compression' value='base_64' id='c_b_base_64'> base-64</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_link'> Link</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_meta'> Meta</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_template'> Template</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_comment'> Comment</td></tr><tr><td style='padding-top:10px'><input type='checkbox' onClick='u_select_all(this)' /> Select all</td></tr></table><p style='padding-left:5px'><input type='submit' /></p></fieldset></form>";
     urlet_modal.contentDocument.getElementsByTagName("body")[0].appendChild(modal_content);
     
     // Add menu script to iframe
@@ -67,14 +67,27 @@ function urlet_main() {
         const $modal_contents = $("#urlet_modal").contents();
       
         // Get menu choices
-        var urlet_menu_choices = {
-            "style":    $modal_contents.find("input[id=c_b_style]").prop("checked"),
-            "script":   $modal_contents.find("input[id=c_b_script]").prop("checked"),
-            "link":     $modal_contents.find("input[id=c_b_link]").prop("checked"),
-            "meta":     $modal_contents.find("input[id=c_b_meta]").prop("checked"),
-            "template": $modal_contents.find("input[id=c_b_template]").prop("checked"),
-            "comment":  $modal_contents.find("input[id=c_b_comment]").prop("checked")
-        };
+        function getChoices() {
+      
+            var choice_menu = {
+                "style":"c_b_style",
+                "script":"c_b_script",
+                "link":"c_b_link",
+                "meta":"c_b_meta",
+                "template":"c_b_template",
+                "comment":"c_b_comment"
+            };
+      
+            $.each(choice_menu, (key, value) => {
+                choice_menu[key] = $modal_contents
+                    .find("input[id=" + value + "]")
+                    .prop("checked");
+            });
+            
+            return choice_menu;
+        }
+      
+        const urlet_menu_choices = getChoices();
     
         // Get selected compression
         const compr = $modal_contents.find("input[type=radio][name=compression]:checked").val();
@@ -124,6 +137,7 @@ function urlet_main() {
       
             if(urlet_menu_choices.style)
                 fetchFiles("style");
+      
             if(urlet_menu_choices.script)
                 fetchFiles("script");
         }
