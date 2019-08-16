@@ -5,14 +5,10 @@ A bookmarklet for compressing the entire content of a webpage into a URL.
 [Click here to get it!](https://benja-johnny.github.io/urlet/bookmarklet/)
 
 
-## Warning
-
-It may crash your browser!
-
-
 ## Bugs, Limitations
 
-Many.
+- Style and script preservation only works if they're part of the document or if they're in a linked .css or .js file
+- Long strings crash browsers
 
 
 ## Special Thanks

@@ -167,7 +167,7 @@ function urlet_main() {
                 encoded_page =
                     "0" +
                     window.btoa(
-                    encodeURIComponent(
+                    encodeURIComponent( /* Needed due to invalid character errors */
                     document.documentElement.outerHTML));
             
             if(compr === "lz_string")
