@@ -19,14 +19,14 @@ function urlet_menu() {
     
     // Add style to iframe contents
     const iframe_style = document.createElement("style");
-    iframe_style.innerHTML = ".urlet-modal-content { background-color: #fefefe; margin: auto; padding: 20px; border: 1px solid #888; width: 80%; } .urlet-close { color: #aaaaaa; float: right; font-size: 28px; font-weight: bold; padding-left: 20px; } .urlet-close:hover, .urlet-close:focus { color: #000; text-decoration: none; cursor: pointer; }";
+    iframe_style.innerHTML = ".urlet-modal-content { background-color: #fefefe; margin: auto; padding: 10px; padding-left: 20px; padding-top: 20px; border: 1px solid #888; max-width: 300px; } .urlet-close { color: #aaaaaa; float: right; font-size: 28px; font-weight: bold; padding-left: 10px; } .urlet-close:hover, .urlet-close:focus { color: #000; text-decoration: none; cursor: pointer; }";
     iframe_style.setAttribute("id", "urlet-item");
     urlet_modal.contentDocument.getElementsByTagName("head")[0].appendChild(iframe_style);
     
     // Create form in iframe
     const modal_content = document.createElement("div");
     modal_content.setAttribute("class", "urlet-modal-content");
-    modal_content.innerHTML = "<span class='urlet-close'>&times;</span><form name='urlet_popup_form' onsubmit='return window.parent.urlet_main();'><fieldset><legend>Urlet - Options</legend><table style='width:100%;padding:5px;text-align:left'><tr><th style='padding-bottom:10px'>Include</th><th style='padding-bottom:10px'>Compression</th></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_style'> Style</td><td><input type='radio' name='compression' value='lz_string' id='c_b_lz_script'  checked='checked'> lz-string</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_script'> Script</td><td><input type='radio' name='compression' value='base_64' id='c_b_base_64'> base-64</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_link'> Link</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_meta'> Meta</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_template'> Template</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_comment'> Comment</td></tr><tr><td style='padding-top:10px'><input type='checkbox' onClick='u_select_all(this)' /> Select all</td></tr></table><p style='padding-left:5px'><input type='submit' /></p></fieldset></form>";
+    modal_content.innerHTML = "<span class='urlet-close'>&times;</span><form name='urlet_popup_form' onsubmit='return window.parent.urlet_main();'><fieldset><legend>Urlet - Options</legend><table style='width:100%;padding:5px;text-align:left'><tr><th style='padding-bottom:10px'>Include</th><th style='padding-bottom:10px'>Compression</th></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_style'> Style</td><td><input type='radio' name='compression' value='lz_string' id='c_b_lz_script'  checked='checked'> lz-string</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_script'> Script</td><td><input type='radio' name='compression' value='base_64' id='c_b_base_64'> base-64</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_link'> Link</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_meta'> Meta</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_template'> Template</td></tr><tr><td><input type='checkbox' name='urlet_checkbox' value='true' id='c_b_comment'> Comment</td></tr><tr><td style='padding-top:10px'><input type='checkbox' onClick='u_select_all(this)' /> Select all</td></tr></table><p style='padding-left:10px'><input type='submit' value='Submit' /></p></fieldset></form>";
     urlet_modal.contentDocument.getElementsByTagName("body")[0].appendChild(modal_content);
     
     // Add menu script to iframe
@@ -83,17 +83,17 @@ function urlet_main() {
                     .find("input[id=" + value + "]")
                     .prop("checked");
             });
-            
+      
             return choice_menu;
         }
       
         const urlet_menu_choices = getChoices();
     
         // Get selected compression
-        const compr = $modal_contents.find("input[type=radio][name=compression]:checked").val();
+        const compr = $modal_contents.find("input[name=compression]:checked").val();
     
         // Display message
-        const form_inner = "<form name='urlet_popup_form' onsubmit=''><fieldset><legend>Please wait...</legend><p><textarea style='width:100%;padding:5px' id='t_area' rows='10'>Link will appear here</textarea></p><p style='padding-left:5px' id='len'>Length: Loading...</p></fieldset></form>";
+        const form_inner = "<form name='urlet_popup_form' onsubmit=''><fieldset><legend>Please wait...</legend><p><textarea style='width:100%' id='t_area' rows='5'>Link will appear here</textarea></p><p id='len'>Length: Loading...</p><p><button type='button'>Open</button></p></fieldset></form>";
       
         $modal_contents.find("form").html(form_inner);
     
@@ -197,6 +197,9 @@ function urlet_main() {
                 
             $form_contents.find("#len")
                 .html(`Length: <font color=${u_col}>${u_len}</font>`);
+            
+            // Open button opens link in new window
+            $form_contents.find(":button").on("click", () => window.open(u_link));
             
         }, 900);
     });
