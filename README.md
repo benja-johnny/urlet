@@ -15,8 +15,8 @@ A bookmarklet for compressing the entire content of a webpage into a URL.
 
 ## Special Thanks
 
-- [jstrieb](https://github.com/jstrieb) (original idea, [urlpages](https://github.com/jstrieb/urlpages))
-- [pieroxy](https://github.com/pieroxy) (compression algorithm, [lz-string](https://github.com/pieroxy/lz-string))
+- [jstrieb](https://github.com/jstrieb) (original idea - [urlpages](https://github.com/jstrieb/urlpages))
+- [pieroxy](https://github.com/pieroxy) (compression algorithm - [lz-string](https://github.com/pieroxy/lz-string))
 
 
 ## Disclaimer
