@@ -5,15 +5,32 @@
 <script src="./scripts/lz-string-1.4.4.js" type="text/javascript"></script>
 <!-- Load URL -->
 <script type="text/javascript">
+
 // Try to get page data from the URL if possible
-if (window.location.hash) {
+const wlh = window.location.hash;
+
+if(wlh) {
+
+    // Get compression type
+    const compr_t = wlh.charAt(1);
+    
+    // Get data part of URL
+    const wlhs = window.location.hash.slice(2);
+    
     // Print value of "html" to the page
-    document.write(
-    // Decode base-64 string URL
-    LZString144.decompressFromBase64(
-    // Get part of URL after "#"
-    window.location.hash.slice(1)));
-} else {
+    if(compr_t == 0) {
+        document.write(
+        // Decode base-64
+        window.atob(wlhs));
+    }
+    if(compr_t == 1) {
+        document.write(
+        // Decode lz-string
+        LZString144.decompressFromBase64(wlhs));
+    }
+}
+else {
+
     // Otherwise redirect to the bookmarklet download page
     window.location.replace("./bookmarklet");
 }
