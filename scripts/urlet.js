@@ -4,6 +4,13 @@ const URLET_URL = 'https://benja-johnny.github.io/urlet/';
 // Adds the modal menu and scripts to the page
 function urlet_menu() {
 
+    // If we're on URLET_URL, just refresh the page
+    const loc_h = location.href;
+    if(loc_h.slice(0, URLET_URL.length) === URLET_URL) {
+        location.reload(false);
+        return;
+    }
+
     // Add modal style
     const modal_style = document.createElement("style");
     modal_style.innerHTML = ".urlet-modal { display: none; position: fixed; z-index: 2147483647; padding-top: 100px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4); }";
