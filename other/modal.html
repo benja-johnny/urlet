@@ -1,0 +1,57 @@
+<span class='urlet-close'>&times;</span>
+<form name='urlet_popup_form' onsubmit='return window.parent.urlet_main(" + "&#39;" + urlet_url + "&#39;, &#39;" + gist_token + "&#39;, &#39;" + pastebin_key + "&#39;" + ");'>
+    <fieldset>
+        <legend>Urlet - Options</legend>
+        <table style='width:100%;padding:5px;text-align:left'>
+            <tr>
+                <th style='padding-bottom:10px'>Include</th>
+                <th style='padding-bottom:10px'>Compression</th>
+            </tr>
+            <tr>
+                <td>
+                    <input type='checkbox' name='urlet_checkbox' value='true' id='c_b_style' checked='checked'> Style
+                </td>
+                <td>
+                    <input type='radio' name='compression' value='lz_string' id='c_b_lz_script'  checked='checked'> lz-string
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type='checkbox' name='urlet_checkbox' value='true' id='c_b_script'> Script
+                </td>
+                <td>
+                    <input type='radio' name='compression' value='base_64' id='c_b_base_64'> base-64
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type='checkbox' name='urlet_checkbox' value='true' id='c_b_link'> Link
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type='checkbox' name='urlet_checkbox' value='true' id='c_b_meta'> Meta
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type='checkbox' name='urlet_checkbox' value='true' id='c_b_template'> Template
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type='checkbox' name='urlet_checkbox' value='true' id='c_b_comment'> Comment
+                </td>
+            </tr>
+            <tr>
+                <td style='padding-top:10px'>
+                    <input type='checkbox' onClick='u_select_all(this)' /> Select all
+                </td>
+            </tr>
+        </table>
+        <p style='padding-left:10px'>
+            <input type='submit' value='Submit' />
+        </p>
+    </fieldset>
+</form>
+

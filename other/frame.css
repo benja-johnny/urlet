@@ -1,0 +1,25 @@
+.urlet-modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 30px;
+    padding-left: 20px;
+    padding-top: 20px;
+    border: 3px solid #888;
+    max-width: 300px;
+    height: 300px;
+    overflow-y: auto;
+}
+
+.urlet-close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    padding-left: 10px;
+}
+
+.urlet-close:hover, .urlet-close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
