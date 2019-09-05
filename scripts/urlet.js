@@ -1,5 +1,5 @@
 // Opens link inside a page element
-function gotoSharedURL(loc) {
+function gotoSharedURL(urlet_url, loc) {
 
     $(function() {
     
@@ -43,13 +43,13 @@ function urlet_menu(script_url, keys, defaults) {
     
     // If we're on gist.github.com
     if(loc_h.includes("gist.github.com/")) {
-        jquery.onload = () => gotoSharedURL("#file-urlet-txt-LC1");
+        jquery.onload = () => gotoSharedURL(urlet_url, "#file-urlet-txt-LC1");
         return;
     }
     
     // If we're on pastebin.com
     if(loc_h.includes("pastebin.com/")) {
-        jquery.onload = () => gotoSharedURL("#paste_code");
+        jquery.onload = () => gotoSharedURL(urlet_url, "#paste_code");
         return;
     }
 
