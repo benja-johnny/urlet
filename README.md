@@ -14,7 +14,7 @@ Share the contents of a webpage via URL.
 - The URL length counter goes from green to red. Green means the link is safe to share and will most likely work as expected.
 
 
-## Bugs, Limitations
+## Limitations
 
 - The github.io page has to be online for the bookmarklet to work.
 - Many websites (such as GitHub) do not allow bookmarklets to run.
