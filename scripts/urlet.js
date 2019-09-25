@@ -26,10 +26,10 @@ function urlet_menu(script_url, keys, defaults) {
     }
     const urlet_url = parseURL();
 
-    // If we're on urlet_url, reload the page
+    // If we're on urlet_url, remove script generated items
     const loc_h = location.href;
     if(loc_h.slice(0, urlet_url.length) === urlet_url) {
-        location.reload(false);
+        $("#urlet_modal, #urlet-item").remove();
         return;
     }
     
