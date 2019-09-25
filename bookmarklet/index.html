@@ -59,14 +59,18 @@
                 });
             }
             
+            // Scroll to the top of the page
+            function scrolltoTop() {
+            
+                $("#MainModal").animate({ scrollTop: 0 }, "fast");
+            }
+            
+            // Function for switching menu pages
             function gotoPage(page_num) {
                 $(function() {
                 
                     const $b_1 = $("#button_1"),
                           $b_2 = $("#button_2");
-                          
-                    // Scroll to the top of the page
-                    $("#MainModal").animate({ scrollTop: 0 }, "fast");
                     
                     if(page_num == 0) {
                     
@@ -83,6 +87,8 @@
                     }
                     
                     if(page_num == 1) {
+                    
+                        scrolltoTop();
                     
                         // Get keys from bookmarklet link, if they were already set
                         const bookmark_href = document.getElementById("favlet").getAttribute("href");
@@ -113,6 +119,8 @@
                     }
                     
                     if(page_num == 2) {
+                    
+                        scrolltoTop();
                         
                         // Get settings from bookmarklet link, if they were already set
                         const bookmark_href = document.getElementById("favlet").getAttribute("href");
@@ -404,12 +412,12 @@
         <noscript><div class="display-1 mt-5">JavaScript is required for this.</div></noscript>
     
         <div id="urlet-link" class="invisible">
-            <div class="lead mb-5 pt-3 pl-3 pr-3 border border-primary rounded shadow">
+            <div class="lead mb-4 pt-3 pl-3 pr-3 border border-primary rounded shadow">
                 <p>Save the following link to your bookmarks:</p>
                 <p><a class="h3" id="favlet" href=""></a></p>
             </div>
             <p>If you click the saved bookmark while on a website that allows bookmarklets,<br>a menu will pop up.</p>
-            <p class="mb-5">If the bookmark is clicked while browsing pastebin.com, it will try to find and open shared Urlet URLs instead of showing the menu.</p>
+            <p class="mb-4">If the bookmark is clicked while browsing pastebin.com, it will try to find and open shared Urlet URLs instead of showing the menu.</p>
             <button type="button" class="btn btn-secondary" onclick="resetModal()">Redo setup</button>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#MainModal">Back to setup</button>
         </div>
