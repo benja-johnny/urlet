@@ -31,7 +31,7 @@
                     
                         const $u_link = $("#urlet-link");
                         
-                        $u_link.attr("class", "visible text-center mt-5 mb-5 ml-3 mr-3");
+                        $u_link.attr("class", "visible text-center mt-3 mb-5 ml-3 mr-3");
                         $u_link.fadeOut(0); // fadeIn only works like this
                         $u_link.fadeIn(500);
                     });
@@ -404,11 +404,11 @@
         <noscript><div class="display-1 mt-5">JavaScript is required for this.</div></noscript>
     
         <div id="urlet-link" class="invisible">
-            <div class="lead mb-5 pt-4 pb-1 border-0 rounded-pill shadow-lg">
+            <div class="lead mb-5 pt-3 pl-3 pr-3 border border-primary rounded shadow">
                 <p>Save the following link to your bookmarks:</p>
                 <p><a class="h3" id="favlet" href=""></a></p>
             </div>
-            <p class="pt-4">If you click the saved bookmark while on a website that allows bookmarklets,<br>a menu will pop up.</p>
+            <p>If you click the saved bookmark while on a website that allows bookmarklets,<br>a menu will pop up.</p>
             <p class="mb-5">If the bookmark is clicked while browsing pastebin.com, it will try to find and open shared Urlet URLs instead of showing the menu.</p>
             <button type="button" class="btn btn-secondary" onclick="resetModal()">Redo setup</button>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#MainModal">Back to setup</button>
