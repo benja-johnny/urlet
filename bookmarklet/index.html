@@ -1,289 +1,438 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html lang="en">
+    <head>
 
-<meta charset="UTF-8">
-<title>Urlet</title>
+        <meta charset="UTF-8">
 
-<script>
+        <!-- Required meta tag for Bootstrap -->
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-// Add/remove (text) from the bookmark title
-function modifyBookmarkTitle(ar, txt) {
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    // ar = add/remove
-    // txt = text to insert/remove
-    
-    var favlet_title = document.getElementById("favlet").innerHTML;
-    
-    // If we want to add text
-    if((ar == "add") && !favlet_title.includes(txt)) {
-    
-        const bracket_end = favlet_title.indexOf(")");
+        <title>Urlet</title>
         
-        // If it's not the only text
-        if(bracket_end != -1)
-            document.getElementById("favlet").innerHTML =
-                favlet_title.slice(0, bracket_end) +
-                ", " +
-                txt +
-                ")";
-        else
-            document.getElementById("favlet").innerHTML =
-                favlet_title +
-                " (" +
-                txt +
-                ")";
-    }
-    
-    // If we want to remove text
-    if((ar == "remove") && favlet_title.includes(txt)) {
-    
-        // If it's the only text
-        if(favlet_title.slice(favlet_title.indexOf("(") + 1, favlet_title.lastIndexOf(")")) == txt)
-            document.getElementById("favlet").innerHTML = document.title;
+        <script>
+            window.onload = () => {
             
-        else {
-        
-            // Remove text
-            const txt_i = favlet_title.indexOf(txt),
-                  ft_length = favlet_title.length;
+            initLink();
             
-            document.getElementById("favlet").innerHTML =
-                favlet_title.slice(0, txt_i) +
-                favlet_title.slice(txt_i + txt.length, ft_length);
-        
-            // Clean up unnecessary commas
-            favlet_title = document.getElementById("favlet").innerHTML;
+                $(function() {
+                
+                    const $the_modal = $("#MainModal");
+                    
+                    gotoPage(0);
+                    
+                    // Show modal after the page loads
+                    $the_modal.modal("show");
+                    
+                    // Show link if modal gets hidden
+                    $the_modal.on("hide.bs.modal", function (e) {
+                    
+                        const $u_link = $("#urlet-link");
+                        
+                        $u_link.attr("class", "visible text-center mt-5 ml-3 mr-3");
+                        $u_link.fadeOut(0); // fadeIn only works like this
+                        $u_link.fadeIn(1000);
+                    });
+                    
+                    // If the modal is shown, hide link
+                    $the_modal.on("show.bs.modal", function (e) {
+                    
+                        const $u_link = $("#urlet-link");
+
+                        $u_link.fadeOut(1000);
+                    });
+                });
+            }
             
-            const i_1 = favlet_title.indexOf(", , "),
-                  i_2 = favlet_title.indexOf("(,"),
-                  i_3 = favlet_title.indexOf(", )");
+            function resetModal() {
+                $(function() {
+                    
+                    gotoPage(0);
+                    $("#MainModal").modal("show");
+                    
+                    // Wait for fadeOut
+                    setTimeout(function() {
+                        initLink();
+                    }, 1000);
+                });
+            }
             
-            if(i_1 != -1) document.getElementById("favlet").innerHTML =
-                favlet_title.slice(0, i_1) +
-                ", " +
-                favlet_title.slice(i_1 + 4, ft_length);
-            if(i_2 != -1) document.getElementById("favlet").innerHTML =
-                favlet_title.slice(0, i_2 + 1) +
-                favlet_title.slice(i_2 + 3, ft_length);
-            if(i_3 != -1) document.getElementById("favlet").innerHTML =
-                favlet_title.slice(0, i_3) +
-                ")";
-        }
-    }
-}
+            function gotoPage(page_num) {
+                $(function() {
+                
+                    const $b_1 = $("#button_1"),
+                          $b_2 = $("#button_2");
+                    
+                    if(page_num == 0) {
+                    
+                        $("#MainModalTitle").html("Urlet setup");
+                        
+                        $(".modal-body").html("<p class='lead'>Welcome!</p><p>Click <b>Next</b> to configure your bookmarklet.</p><p>Click <b>Skip</b> if you want the bookmarklet link without hard-coded settings.</p>");
+                        
+                        $b_1.attr("data-dismiss", "modal");
+                        $b_1.removeAttr("onclick");
+                        $b_1.html("Skip");
+                        $b_2.removeAttr("data-dismiss");
+                        $b_2.html("Next");
+                        $b_2.attr("onclick", "gotoPage(1)");
+                    }
+                    
+                    if(page_num == 1) {
+                    
+                        // Get keys from bookmarklet link, if they were already set
+                        const bookmark_href = document.getElementById("favlet").getAttribute("href");
+                        const keys_str = bookmark_href.slice(bookmark_href.indexOf("k = [") + 5, bookmark_href.lastIndexOf("], d = {"));
+                        var keys = ["", ""];
+                        
+                        if(keys_str != "") keys = keys_str.split(", ");
+                                                
+                        $(".modal-body").html(`
+                            <p>You will need API keys to enable sharing data to Pastebin and GitHub.</p>
+                            <p>You can have them hard-coded if you fill the fields below,<br>or you can provide them right before sharing a link.</p>
+                            <div onkeyup='return updateKeys()'>
+                            <p>Gist token:<br>
+                            <input type='text' style='width:90%' placeholder='Must be 40 characters long.' onblur='checkLength(0)' value=${keys[0]}></p>
+                            <p>Pastebin key:<br>
+                            <input type='text' style='width:90%' placeholder='Must be 32 characters long.' onblur='checkLength(1)' value=${keys[1]}></p>
+                            </div>
+                            <p>To get a Gist token, go here:<br>
+                            <a href='https://github.com/settings/tokens'>https://github.com/settings/tokens</a></p>
+                            <p>To get your Pastebin Developer API Key, go here:<br>
+                            <a href='https://pastebin.com/api'>https://pastebin.com/api</a></p>
+                        `);
+                        
+                        $b_1.attr("onclick", "gotoPage(0)");
+                        $b_1.html("Back");
+                        $b_1.removeAttr("data-dismiss");
+                        $b_2.attr("onclick", "gotoPage(2)");
+                    }
+                    
+                    if(page_num == 2) {
+                        
+                        // Get settings from bookmarklet link, if they were already set
+                        const bookmark_href = document.getElementById("favlet").getAttribute("href");
+                        const settings_json = JSON.parse(bookmark_href.slice(bookmark_href.indexOf("d = {") + 4, bookmark_href.lastIndexOf("; s.id")));
+                                                                    
+                        $(".modal-body").html(`
+                            <p>You can have hard-coded default settings in your bookmarklet.</p>
+                            <p class='pb-1'>If you tick <i><b>I want these settings hard-coded</b>,</i> your bookmarklet will not ask for settings when you click it.<br>It will always use these settings instead.</p>
+                            <table style='width:100%;padding:5px;text-align:left'>
+                                <tr>
+                                    <th style='padding-bottom:10px'>Include</th>
+                                    <th style='padding-bottom:10px'>Compression</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type='checkbox' name='urlet_checkbox' id='cb_style' onclick='updateDefaults()'> Style
+                                    </td>
+                                    <td>
+                                        <input type='radio' name='compression' id='cb_lz_string'  checked='checked' onclick='updateDefaults()'> lz-string
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type='checkbox' name='urlet_checkbox' id='cb_script' onclick='updateDefaults()'> Script
+                                    </td>
+                                    <td>
+                                        <input type='radio' name='compression' id='cb_base_64' onclick='updateDefaults()'> base-64
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type='checkbox' name='urlet_checkbox' id='cb_link' onclick='updateDefaults()'> Link
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type='checkbox' name='urlet_checkbox' id='cb_meta' onclick='updateDefaults()'> Meta
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type='checkbox' name='urlet_checkbox' id='cb_template' onclick='updateDefaults()'> Template
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type='checkbox' name='urlet_checkbox' id='cb_comment' onclick='updateDefaults()'> Comment
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style='padding-top:10px'>
+                                        <input type='checkbox' onClick='u_select_all(this)' /> Select all
+                                    </td>
+                                </tr>
+                            </table>
+                            <p style='margin-top:20px'>
+                                <input type='checkbox' id='cb_default_settings' onclick='updateDefaults()'> I want these settings hard-coded
+                            </p>
+                        `);
+                        
+                        // Tick the things that were set
+                        // We do this here, because of the "checked" property's issues in different browsers
+                        if(!$.isEmptyObject(settings_json)) {
+                        
+                            $.each(settings_json, (k, v) => {
+                            
+                                if(v) $("#cb_" + k).prop("checked", "checked");
+                            });
+                            
+                            $("#cb_default_settings").prop("checked", "checked");
+                        }
+                        
+                        $b_1.attr("onclick", "gotoPage(1)");
+                        $b_2.html("Next");
+                        $b_2.removeAttr("data-dismiss");
+                        $b_2.attr("onclick", "gotoPage(3)");
+                    }
+                    
+                    if(page_num == 3) {
+                    
+                        $(".modal-body").html(`
+                        <p>To easily distinguish between different Urlet bookmarks,<br>you can include the hostname in the bookmark title.</p>
+                        <p class='pt-1'><input type='checkbox' id='cb_include_host' onclick='includeHost()'> Include hostname</p>
+                        `);
+                        
+                        // Tick if it was set
+                        if($("#favlet").html().includes(window.location.hostname))
+                            $("#cb_include_host").prop("checked", "checked");
+                        
+                        $b_1.attr("onclick", "gotoPage(2)");
+                        $b_2.html("Get Bookmarklet");
+                        $b_2.attr("data-dismiss", "modal");
+                    }
+                });
+            }
+            
+            // Set link default script and title
+            function initLink() {
+            
+                const f = document.getElementById("favlet");
+            
+                f.href = "javascript:(function(){const s = document.createElement('script'), k = [], d = {}; s.id = 'urlet-item'; s.src = ''; document.getElementsByTagName('head')[0].appendChild(s); s.onload = function() {urlet_menu(s.src, k, d);}})(); void(0);";
+                f.innerHTML = document.title;
+                updateScriptUrl();
+            }
+            
+            // Add/remove (text) from the bookmark title
+            function modifyBookmarkTitle(ar, txt) {
 
-// Updates defaults JSON (d) in the bookmarklet script (link)
-function updateDefaults() {
+                // ar = add/remove
+                // txt = text to insert/remove
+                
+                var favlet_title = document.getElementById("favlet").innerHTML;
+                
+                // If we want to add text
+                if((ar == "add") && !favlet_title.includes(txt)) {
+                
+                    const bracket_end = favlet_title.indexOf(")");
+                    
+                    // If it's not the only text
+                    if(bracket_end != -1)
+                        document.getElementById("favlet").innerHTML =
+                            favlet_title.slice(0, bracket_end) +
+                            ", " +
+                            txt +
+                            ")";
+                    else
+                        document.getElementById("favlet").innerHTML =
+                            favlet_title +
+                            " (" +
+                            txt +
+                            ")";
+                }
+                
+                // If we want to remove text
+                if((ar == "remove") && favlet_title.includes(txt)) {
+                
+                    // If it's the only text
+                    if(favlet_title.slice(favlet_title.indexOf("(") + 1, favlet_title.lastIndexOf(")")) == txt)
+                        document.getElementById("favlet").innerHTML = document.title;
+                        
+                    else {
+                    
+                        // Remove text
+                        const txt_i = favlet_title.indexOf(txt),
+                              ft_length = favlet_title.length;
+                        
+                        document.getElementById("favlet").innerHTML =
+                            favlet_title.slice(0, txt_i) +
+                            favlet_title.slice(txt_i + txt.length, ft_length);
+                    
+                        // Clean up unnecessary commas
+                        favlet_title = document.getElementById("favlet").innerHTML;
+                        
+                        const i_1 = favlet_title.indexOf(", , "),
+                              i_2 = favlet_title.indexOf("(,"),
+                              i_3 = favlet_title.indexOf(", )");
+                        
+                        if(i_1 != -1) document.getElementById("favlet").innerHTML =
+                            favlet_title.slice(0, i_1) +
+                            ", " +
+                            favlet_title.slice(i_1 + 4, ft_length);
+                        if(i_2 != -1) document.getElementById("favlet").innerHTML =
+                            favlet_title.slice(0, i_2 + 1) +
+                            favlet_title.slice(i_2 + 3, ft_length);
+                        if(i_3 != -1) document.getElementById("favlet").innerHTML =
+                            favlet_title.slice(0, i_3) +
+                            ")";
+                    }
+                }
+            }
 
-    function replaceDefaults(o) {
-        
-        const bookmark = document.getElementById("favlet"),
-              bookmark_href = bookmark.getAttribute("href");
-        
-        bookmark.setAttribute("href",
-            bookmark_href.slice(0, bookmark_href.indexOf("d = {") + 4) +
-            JSON.stringify(o) +
-            bookmark_href.slice(bookmark_href.lastIndexOf("}; s.id") + 1, bookmark_href.length)
-        );
-    }
+            // Updates defaults JSON (d) in the bookmarklet script (link)
+            function updateDefaults() {
+
+                function replaceDefaults(o) {
+                    
+                    const bookmark = document.getElementById("favlet"),
+                          bookmark_href = bookmark.getAttribute("href");
+                    
+                    bookmark.setAttribute("href",
+                        bookmark_href.slice(0, bookmark_href.indexOf("d = {") + 4) +
+                        JSON.stringify(o) +
+                        bookmark_href.slice(bookmark_href.lastIndexOf("}; s.id") + 1, bookmark_href.length)
+                    );
+                }
+                
+                // Only update if the checkbox is checked
+                if(document.getElementById("cb_default_settings").checked) {
+                
+                    replaceDefaults({
+                        "lz_string" : document.getElementById("cb_lz_string").checked,
+                        "base_64" : document.getElementById("cb_base_64").checked,
+                        "style" : document.getElementById("cb_style").checked,
+                        "script" : document.getElementById("cb_script").checked,
+                        "link" : document.getElementById("cb_link").checked,
+                        "meta" : document.getElementById("cb_meta").checked,
+                        "template" : document.getElementById("cb_template").checked,
+                        "comment" : document.getElementById("cb_comment").checked
+                    });
+                    modifyBookmarkTitle("add", "options");
+                    
+                } else {
+                
+                    replaceDefaults({});
+                    modifyBookmarkTitle("remove", "options");
+                }
+            }
+
+            // Updates the keys array (k) in the bookmarklet script (link)
+            function updateKeys() {
+
+                const bookmark = document.getElementById("favlet");
+                const bookmark_href = bookmark.getAttribute("href");
+                
+                bookmark.setAttribute("href",
+                    bookmark_href.slice(0, bookmark_href.indexOf("k = [") + 5) +
+                    "'" +
+                    document.getElementsByTagName("input")[0].value +
+                    "', '" +
+                    document.getElementsByTagName("input")[1].value +
+                    "'" +
+                    bookmark_href.slice(bookmark_href.lastIndexOf("], d = {"), bookmark_href.length)
+                );
+            }
+
+            // Updates s.src in the bookmarklet script (link)
+            function updateScriptUrl() {
+
+                const bookmark_url = window.location.href;
+                const script_url = bookmark_url.slice(0, bookmark_url.indexOf("/bookmarklet")) + "/scripts/urlet.js";
+                const bookmark = document.getElementById("favlet");
+                const bookmark_href = bookmark.getAttribute("href");
+                
+                bookmark.setAttribute("href",
+                    bookmark_href.slice(0, bookmark_href.indexOf("s.src = '") + 9) +
+                    script_url +
+                    bookmark_href.slice(bookmark_href.lastIndexOf("';"), bookmark_href.length)
+                );
+            }
+
+            // Select all checkbox selects all checkboxes
+            function u_select_all(source) {
+
+                const u_checkboxes = document.getElementsByName("urlet_checkbox");
+                
+                for(var i = 0, n = u_checkboxes.length; i < n; i++) {
+                    u_checkboxes[i].checked = source.checked;
+                }
+                
+                updateDefaults();
+            }
+
+            // Triggered by defocusing Gist token and Pastebin key input
+            function checkLength(i) {
+
+                const a = document.getElementsByTagName("input")[i];
+                
+                // Value can only be 40/32 characters long or empty
+                if(((i == 0) && ((a.value.length != 40) && (a.value.length != 0))) || ((i == 1) && ((a.value.length != 32) && (a.value.length != 0)))) {
+                
+                    alert("Please input a valid token.");
+                    a.value = "";
+                    updateKeys();
+                    
+                } else
+                    modifyBookmarkTitle("add", "keys");
+                
+                // If there's no accepted key, remove (keys)
+                if((document.getElementsByTagName("input")[0].value == "") && (document.getElementsByTagName("input")[1].value == ""))
+                    modifyBookmarkTitle("remove", "keys");
+            }
+
+            // Puts the hostname in the bookmark title
+            function includeHost() {
+
+                const h_name = window.location.hostname;
+                
+                if(document.getElementById("cb_include_host").checked)
+                    modifyBookmarkTitle("add", h_name);
+                else
+                    modifyBookmarkTitle("remove", h_name);
+            }
+        </script>
+
+    </head>
+    <body class="mx-auto" style="max-width: 600px;">
     
-    // Only update if the checkbox is checked
-    if(document.getElementById("cb_default_settings").checked) {
+        <div id="urlet-link" class="invisible">
+            <div class="lead mb-5 pt-4 pb-1 ml-5 mr-5 border-0 rounded-pill shadow-lg">
+                <p>Save the following link to your bookmarks:</p>
+                <p><a class="h3" id="favlet" href=""></a></p>
+            </div>
+            <p class="pt-4">If you click the saved bookmark while on a website that allows bookmarklets,<br>a menu will pop up.</p>
+            <p class="mb-5">If the bookmark is clicked while browsing pastebin.com, it will try to find and open shared Urlet URLs instead of showing the menu.</p>
+            <button type="button" class="btn btn-secondary" onclick="resetModal()">Redo setup</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#MainModal">Back to setup</button>
+        </div>
     
-        replaceDefaults({
-            "lz_string" : document.getElementById("cb_lz_string").checked,
-            "base_64" : document.getElementById("cb_base_64").checked,
-            "style" : document.getElementById("cb_style").checked,
-            "script" : document.getElementById("cb_script").checked,
-            "link" : document.getElementById("cb_link").checked,
-            "meta" : document.getElementById("cb_meta").checked,
-            "template" : document.getElementById("cb_template").checked,
-            "comment" : document.getElementById("cb_comment").checked
-        });
-        modifyBookmarkTitle("add", "options");
-        
-    } else {
-    
-        replaceDefaults({});
-        modifyBookmarkTitle("remove", "options");
-    }
-}
+        <!-- Modal -->
+        <div class="modal fade" id="MainModal" tabindex="-1" role="dialog" aria-labelledby="MainModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="MainModalTitle"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button id="button_1" type="button" class="btn btn-secondary"></button>
+                        <button id="button_2" type="button" class="btn btn-primary"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-// Updates the keys array (k) in the bookmarklet script (link)
-function updateKeys() {
+        <!-- Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-    const bookmark = document.getElementById("favlet");
-    const bookmark_href = bookmark.getAttribute("href");
-    
-    bookmark.setAttribute("href",
-        bookmark_href.slice(0, bookmark_href.indexOf("k = [") + 5) +
-        "'" +
-        document.getElementsByTagName("input")[0].value +
-        "', '" +
-        document.getElementsByTagName("input")[1].value +
-        "'" +
-        bookmark_href.slice(bookmark_href.lastIndexOf("], d = {"), bookmark_href.length)
-    );
-}
-
-// Updates s.src in the bookmarklet script (link)
-function updateScriptUrl() {
-
-    const bookmark_url = window.location.href;
-    const script_url = bookmark_url.slice(0, bookmark_url.indexOf("/bookmarklet")) + "/scripts/urlet.js";
-    const bookmark = document.getElementById("favlet");
-    const bookmark_href = bookmark.getAttribute("href");
-    
-    bookmark.setAttribute("href",
-        bookmark_href.slice(0, bookmark_href.indexOf("s.src = '") + 9) +
-        script_url +
-        bookmark_href.slice(bookmark_href.lastIndexOf("';"), bookmark_href.length)
-    );
-}
-
-// Select all checkbox selects all checkboxes
-function u_select_all(source) {
-
-    const u_checkboxes = document.getElementsByName("urlet_checkbox");
-    
-    for(var i = 0, n = u_checkboxes.length; i < n; i++) {
-        u_checkboxes[i].checked = source.checked;
-    }
-    
-    updateDefaults();
-}
-
-// Triggered by defocusing Gist token and Pastebin key input
-function checkLength(i) {
-
-    const a = document.getElementsByTagName("input")[i];
-    
-    // Value can only be 40/32 characters long or empty
-    if(((i == 0) && ((a.value.length != 40) && (a.value.length != 0))) || ((i == 1) && ((a.value.length != 32) && (a.value.length != 0)))) {
-    
-        alert("Please input a valid token.");
-        a.value = "";
-        updateKeys();
-        
-    } else
-        modifyBookmarkTitle("add", "keys");
-    
-    // If there's no accepted key, remove (keys)
-    if((document.getElementsByTagName("input")[0].value == "") && (document.getElementsByTagName("input")[1].value == ""))
-        modifyBookmarkTitle("remove", "keys");
-}
-
-// Puts the hostname in the bookmark title
-function includeHost() {
-
-    const h_name = window.location.hostname;
-    
-    if(document.getElementById("cb_include_host").checked)
-        modifyBookmarkTitle("add", h_name);
-    else
-        modifyBookmarkTitle("remove", h_name);
-}
-
-// Delete Gist token and Pastebin key
-function resetKeys() {
-    document.getElementsByTagName("input")[0].value = "";
-    document.getElementsByTagName("input")[1].value = "";
-}
-
-// These need to be updated after the page has loaded
-window.onload = () => {
-    document.getElementById("favlet").innerHTML = document.title;
-    resetKeys();
-    includeHost();
-    updateScriptUrl();
-    updateKeys();
-    updateDefaults();
-}
-
-</script>
-
-</head>
-<body style="margin:30px">
-
-<h1><a id="favlet" href="javascript:(function(){const s = document.createElement('script'), k = [], d = {}; s.id = 'urlet-item'; s.src = ''; document.getElementsByTagName('head')[0].appendChild(s); s.onload = function() {urlet_menu(s.src, k, d);}})(); void(0);">Urlet</a> ☜ Save this link to your bookmarks!</h1>
-<h2>But before you do...</h2>
-<h3>You can hard code the settings below into your bookmark:</h3>
-
-<fieldset style='margin-top:10px;max-width:350px'>
-    <legend>Keys</legend>
-    <div onkeyup='return updateKeys()'>
-    <p>Gist token:<br>
-    <input type='text' style='width:90%' placeholder='Must be 40 characters long.' onblur='checkLength(0)'></p>
-    <p>Pastebin key:<br>
-    <input type='text' style='width:90%' placeholder='Must be 32 characters long.' onblur='checkLength(1)'></p>
-    </div>
-    <p>To get a Gist token, go here:<br>
-    <a href="https://github.com/settings/tokens">https://github.com/settings/tokens</a></p>
-    <p>To get your Pastebin Developer API Key, go here:<br>
-    <a href="https://pastebin.com/api">https://pastebin.com/api</a></p>
-</fieldset>
-
-<fieldset style='margin-top:25px;max-width:250px'>
-    <legend>Options</legend>
-    <table style='width:100%;padding:5px;text-align:left'>
-        <tr>
-            <th style='padding-bottom:10px'>Include</th>
-            <th style='padding-bottom:10px'>Compression</th>
-        </tr>
-        <tr>
-            <td>
-                <input type='checkbox' name='urlet_checkbox' id='cb_style' onclick="updateDefaults()"> Style
-            </td>
-            <td>
-                <input type='radio' name='compression' id='cb_lz_string'  checked='checked' onclick="updateDefaults()"> lz-string
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type='checkbox' name='urlet_checkbox' id='cb_script' onclick="updateDefaults()"> Script
-            </td>
-            <td>
-                <input type='radio' name='compression' id='cb_base_64' onclick="updateDefaults()"> base-64
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type='checkbox' name='urlet_checkbox' id='cb_link' onclick="updateDefaults()"> Link
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type='checkbox' name='urlet_checkbox' id='cb_meta' onclick="updateDefaults()"> Meta
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type='checkbox' name='urlet_checkbox' id='cb_template' onclick="updateDefaults()"> Template
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type='checkbox' name='urlet_checkbox' id='cb_comment' onclick="updateDefaults()"> Comment
-            </td>
-        </tr>
-        <tr>
-            <td style='padding-top:10px'>
-                <input type='checkbox' onClick='u_select_all(this)' /> Select all
-            </td>
-        </tr>
-    </table>
-    <p style='margin-top:20px'>
-        <input type='checkbox' id='cb_default_settings' onclick='updateDefaults()'> Always use these options
-    </p>
-</fieldset>
-
-<fieldset style='margin-top:25px;max-width:300px'>
-    <legend>Hostname</legend>
-    <p>
-        <input type='checkbox' id='cb_include_host' onclick='includeHost()'> Include the hostname in the bookmark title
-    </p>
-</fieldset>
-
-</body>
+    </body>
 </html>
