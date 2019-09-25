@@ -33,7 +33,7 @@
                         
                         $u_link.attr("class", "visible text-center mt-5 mb-5 ml-3 mr-3");
                         $u_link.fadeOut(0); // fadeIn only works like this
-                        $u_link.fadeIn(1000);
+                        $u_link.fadeIn(500);
                     });
                     
                     // If the modal is shown, hide link
@@ -41,7 +41,7 @@
                     
                         const $u_link = $("#urlet-link");
 
-                        $u_link.fadeOut(1000);
+                        $u_link.fadeOut(500);
                     });
                 });
             }
@@ -55,7 +55,7 @@
                     // Wait for fadeOut
                     setTimeout(function() {
                         initLink();
-                    }, 1000);
+                    }, 500);
                 });
             }
             
@@ -64,6 +64,9 @@
                 
                     const $b_1 = $("#button_1"),
                           $b_2 = $("#button_2");
+                          
+                    // Scroll to the top of the page
+                    $("#MainModal").animate({ scrollTop: 0 }, "fast");
                     
                     if(page_num == 0) {
                     
