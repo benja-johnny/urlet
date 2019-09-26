@@ -18,6 +18,7 @@ Share the contents of a webpage via URL.
 
 - The github.io page has to be online for the bookmarklet to work.
 - Many websites (such as GitHub) do not allow bookmarklets to run.
+- Mobile browsers usually do not support bookmarking the bookmarklet.
 - Style and script preservation only works if they are part of the document or in a linked .css or .js file.
 - Images are not preserved.
 - GitHub Gist and Pastebin sharing need API keys to work.
@@ -25,11 +26,14 @@ Share the contents of a webpage via URL.
 - If the URL length counter is red, the link will most likely not work as expected and the browser may crash.
 
 
-## Special Thanks
+## Thanks to
 
-- [jstrieb](https://github.com/jstrieb) (idea source - [urlpages](https://github.com/jstrieb/urlpages))
-- [pieroxy](https://github.com/pieroxy) (compression algorithm - [lz-string](https://github.com/pieroxy/lz-string))
-- [Rob Wu](https://github.com/Rob--W) (CORS Anywhere - [cors-anywhere](https://github.com/Rob--W/cors-anywhere))
+- [pieroxy](https://github.com/pieroxy) ([lz-string](https://github.com/pieroxy/lz-string))
+- [Rob Wu](https://github.com/Rob--W) ([cors-anywhere](https://github.com/Rob--W/cors-anywhere))
+- [jstrieb](https://github.com/jstrieb) ([urlpages](https://github.com/jstrieb/urlpages))
+- [jQuery team](https://jquery.org/team/) ([jQuery](https://jquery.com/))
+- [Bootstrap team](https://github.com/orgs/twbs/people) ([Bootstrap](https://getbootstrap.com/))
+- [GitHub](https://github.com/)
 
 
 ## Disclaimer
