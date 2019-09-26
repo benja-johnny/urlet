@@ -33,7 +33,7 @@ Share the contents of a webpage via URL.
 - [jstrieb](https://github.com/jstrieb) ([urlpages](https://github.com/jstrieb/urlpages))
 - [jQuery team](https://jquery.org/team/) ([jQuery](https://jquery.com/))
 - [Bootstrap team](https://github.com/orgs/twbs/people) ([Bootstrap](https://getbootstrap.com/))
-- [GitHub](https://github.com/)
+- [GitHub](https://github.com/) ([Gist](https://gist.github.com/))
 
 
 ## Disclaimer
