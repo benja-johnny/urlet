@@ -2,37 +2,25 @@
 <html>
 <head>
 <meta charset="UTF-8">
-
 <!-- Load lz-string compressor -->
 <script src="./scripts/lz-string-1.4.4.js" type="text/javascript"></script>
 <!-- Load URL -->
-<script type="text/javascript">
-
+<script>
 // Try to get page data from the URL if possible
 const wlh = window.location.hash;
-
-if(wlh) {
-
+if (wlh) {
     // Get compression type
     const compr_t = wlh.charAt(1);
-    
     // Get data part of URL
     const wlhs = window.location.hash.slice(2);
-    
     // Print value of "html" to the page
-    if(compr_t == 0) {
-        document.write(
-        decodeURIComponent(
-        window.atob(wlhs)));
+    if (compr_t === 0) {
+        document.write(decodeURIComponent(window.atob(wlhs)));
     }
-    
-    if(compr_t == 1) {
-        document.write(
-        LZString144.decompressFromBase64(wlhs));
+    if (compr_t === 1) {
+        document.write(LZString144.decompressFromBase64(wlhs));
     }
-}
-else {
-
+} else {
     // Otherwise redirect to the bookmarklet download page
     window.location.replace("./bookmarklet");
 }
