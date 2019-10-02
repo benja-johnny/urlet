@@ -5,12 +5,10 @@
 /*jslint
     browser devel long this
 */
-// Fetches files
-function fetchFiles(style_hrefs, s) {
+function fetchFiles(style_hrefs, s) { // Fetches files
     style_hrefs.forEach((link) => $(document.createElement(s)).appendTo("head").load(link));
 }
-// Opens link inside a page element
-function gotoSharedURL(urlet_url, loc) {
+function gotoSharedURL(urlet_url, loc) { // Opens link inside a page element
     $(function () {
         const paste = $(loc).val();
         if (paste.includes(urlet_url)) {
@@ -21,10 +19,8 @@ function gotoSharedURL(urlet_url, loc) {
         $("#urlet_modal, #urlet-item").remove();
     });
 }
-// Adds the modal menu and scripts to the page
-function urlet_menu(script_url, keys, defaults) {
-    // Did we get the script URL?
-    function parseURL() {
+function urlet_menu(script_url, keys, defaults) { // Adds the modal menu and scripts to the page
+    function parseURL() { // Did we get the script URL?
         const i_scripts = script_url.indexOf("scripts");
         return (
             i_scripts !== -1
@@ -33,30 +29,25 @@ function urlet_menu(script_url, keys, defaults) {
         );
     }
     const urlet_url = parseURL();
-    // If we're on urlet_url, remove script generated items
     const loc_h = location.href;
-    if (loc_h.slice(0, urlet_url.length) === urlet_url) {
+    if (loc_h.slice(0, urlet_url.length) === urlet_url) { // If we're on urlet_url, remove script generated items
         $("#urlet_modal, #urlet-item").remove();
         return;
     }
-    // Add jQuery
     const jquery = document.createElement("script");
     jquery.setAttribute("src", "https://code.jquery.com/jquery-3.4.1.min.js");
     jquery.setAttribute("integrity", "sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=");
     jquery.setAttribute("crossorigin", "anonymous");
     jquery.setAttribute("id", "urlet-item");
-    document.getElementsByTagName("head")[0].appendChild(jquery);
-    // If we're on gist.github.com
-    if (loc_h.includes("gist.github.com/")) {
+    document.getElementsByTagName("head")[0].appendChild(jquery); // Add jQuery
+    /*if (loc_h.includes("gist.github.com/")) { // If we're on gist.github.com, find and go to URL; Does not work due to bookmarklets being blocked on GitHub
         jquery.onload = () => gotoSharedURL(urlet_url, "#file-urlet-txt-LC1");
         return;
-    }
-    // If we're on pastebin.com
-    if (loc_h.includes("pastebin.com/")) {
+    }*/
+    if (loc_h.includes("pastebin.com/")) { // If we're on pastebin.com, find and go to URL
         jquery.onload = () => gotoSharedURL(urlet_url, "#paste_code");
         return;
     }
-    // Add modal style
     const modal_style = document.createElement("style");
     modal_style.innerHTML = `
         .urlet-modal {
@@ -74,14 +65,12 @@ function urlet_menu(script_url, keys, defaults) {
         }
     `;
     modal_style.setAttribute("id", "urlet-item");
-    document.getElementsByTagName("head")[0].appendChild(modal_style);
-    // Add iframe
+    document.getElementsByTagName("head")[0].appendChild(modal_style); // Add modal style
     const urlet_modal = document.createElement("iframe");
     urlet_modal.setAttribute("id", "urlet_modal");
     urlet_modal.setAttribute("class", "urlet-modal");
-    document.getElementsByTagName("body")[0].appendChild(urlet_modal);
+    document.getElementsByTagName("body")[0].appendChild(urlet_modal); // Add iframe
     urlet_modal.style.display = "block";
-    // Add style to iframe contents
     const iframe_style = document.createElement("style");
     iframe_style.innerHTML = `
         .urlet-modal-content {
@@ -109,8 +98,7 @@ function urlet_menu(script_url, keys, defaults) {
         }
     `;
     iframe_style.setAttribute("id", "urlet-item");
-    urlet_modal.contentDocument.getElementsByTagName("head")[0].appendChild(iframe_style);
-    // Create form in iframe
+    urlet_modal.contentDocument.getElementsByTagName("head")[0].appendChild(iframe_style); // Add style to iframe contents
     const modal_content = document.createElement("div");
     modal_content.setAttribute("class", "urlet-modal-content");
     modal_content.innerHTML = `
@@ -171,8 +159,7 @@ function urlet_menu(script_url, keys, defaults) {
             </fieldset>
         </form>
     `;
-    urlet_modal.contentDocument.getElementsByTagName("body")[0].appendChild(modal_content);
-    // Add menu script to iframe
+    urlet_modal.contentDocument.getElementsByTagName("body")[0].appendChild(modal_content); // Create form in iframe
     const modal_script = document.createElement("script");
     modal_script.innerHTML = `
         const urlet_modal = window.parent.document.getElementById('urlet_modal');
@@ -195,45 +182,35 @@ function urlet_menu(script_url, keys, defaults) {
         }
     `;
     modal_script.setAttribute("id", "urlet-item");
-    urlet_modal.contentDocument.getElementsByTagName("head")[0].appendChild(modal_script);
-    // Add elements to iframe after it has loaded (needed for Firefox)
-    // Might cause trouble later
-    urlet_modal.onload = function () {
+    urlet_modal.contentDocument.getElementsByTagName("head")[0].appendChild(modal_script); // Add menu script to iframe
+    urlet_modal.onload = function () { // Add elements to iframe after it has loaded (needed for Firefox); Might cause trouble later
         urlet_modal.contentDocument.getElementsByTagName("head")[0].appendChild(iframe_style);
         urlet_modal.contentDocument.getElementsByTagName("body")[0].appendChild(modal_content);
         urlet_modal.contentDocument.getElementsByTagName("head")[0].appendChild(modal_script);
     };
-    // Add lz-string-1.4.4
     const lz_string = document.createElement("script");
     lz_string.setAttribute("src", urlet_url + "scripts/lz-string-1.4.4.js");
     lz_string.setAttribute("id", "urlet-item");
-    document.getElementsByTagName("head")[0].appendChild(lz_string);
-    // If there were defaults set (defaults != {}), use those settings
+    document.getElementsByTagName("head")[0].appendChild(lz_string); // Add lz-string-1.4.4
     jquery.onload = function () {
-        if (!$.isEmptyObject(defaults)) {
+        if (!$.isEmptyObject(defaults)) { // If there were defaults set (defaults != {}), use those settings
             $(function () {
                 const m_contents = $("#urlet_modal").contents();
-                // Remove the check from Style
-                m_contents.find("#c_b_style").prop("checked", false);
-                // Check boxes of default options
-                $.each(defaults, function (k, v) {
+                m_contents.find("#c_b_style").prop("checked", false); // Remove the check from Style
+                $.each(defaults, function (k, v) { // Check boxes of default options
                     if (v) {
                         m_contents.find("#c_b_" + k).prop("checked", "checked");
                     }
                 });
-                // Submit
-                m_contents.find("input[type=submit]").click();
+                m_contents.find("input[type=submit]").click(); // Click Submit
             });
         }
     };
 }
-// Function triggered by submit button
-function urlet_main(urlet_url, gist_token, pastebin_key) {
-    // Execute after page has loaded
-    $(function () {
+function urlet_main(urlet_url, gist_token, pastebin_key) { // Function triggered by submit button
+    $(function () { // Execute after page has loaded
         const $modal_contents = $("#urlet_modal").contents();
-        // Get menu choices
-        function getChoices() {
+        function getChoices() { // Get menu choices
             let choice_menu = {
                 "style": "c_b_style",
                 "script": "c_b_script",
@@ -248,9 +225,7 @@ function urlet_main(urlet_url, gist_token, pastebin_key) {
             return choice_menu;
         }
         const urlet_menu_choices = getChoices();
-        // Get selected compression
-        const compr = $modal_contents.find("input[name=compression]:checked").val();
-        // Display message
+        const compr = $modal_contents.find("input[name=compression]:checked").val(); // Get selected compression
         const form_inner = `
             <form name='urlet_popup_form' onsubmit=''>
                 <fieldset>
@@ -337,60 +312,47 @@ function urlet_main(urlet_url, gist_token, pastebin_key) {
                 </fieldset>
             </form>
         `;
-        $modal_contents.find("form").html(form_inner);
-        // Remove metadata
-        if (!urlet_menu_choices.meta) {
+        $modal_contents.find("form").html(form_inner); // Display message
+        if (!urlet_menu_choices.meta) { // Remove metadata if they were not selected
             $("meta").remove();
         }
-        // Remove comments
-        if (!urlet_menu_choices.comment) {
+        if (!urlet_menu_choices.comment) { // Remove comments if they were not selected
             $("*").contents().each(function () {
                 if (this.nodeType === Node.COMMENT_NODE) {
                     $(this).remove();
                 }
             });
         }
-        // Remove templates
-        if (!urlet_menu_choices.template) {
+        if (!urlet_menu_choices.template) { // Remove templates if they were not selected
             $("template").remove();
         }
-        // If the user wants to preserve style/script
-        if (urlet_menu_choices.style || urlet_menu_choices.script) {
-            // Put links of .css and .js files into an array
+        if (urlet_menu_choices.style || urlet_menu_choices.script) { // If the user wants to preserve style or script
             let style_hrefs = [];
             let script_hrefs = [];
-            // Find .css and .js file sources and put them in a list
-            const s_hrefs = $.grep($("link").map((ignore, el) => $(el).attr("href")), (n, ignore) => n.match(/\.(css|js)(?=[?#])|(\.)(css|js)$/gmi));
-            // Put them in separate lists
-            s_hrefs.forEach((i) => (
+            const s_hrefs = $.grep($("link").map((ignore, el) => $(el).attr("href")), (n, ignore) => n.match(/\.(css|js)(?=[?#])|(\.)(css|js)$/gmi)); // Find .css and .js file sources and put them in a list
+            s_hrefs.forEach((i) => ( // Put them in separate lists
                 i.match(/\.(js)(?=[?#])|(\.)(js)$/gmi)
                 ? script_hrefs.push(i)
                 : style_hrefs.push(i)
             ));
-            if (urlet_menu_choices.style) {
+            if (urlet_menu_choices.style) { // Fetch .css files if they were selected
                 fetchFiles(style_hrefs, "style");
             }
-            if (urlet_menu_choices.script) {
+            if (urlet_menu_choices.script) { // Fetch .js files if they were selected
                 fetchFiles(style_hrefs, "script");
             }
         }
-        // Remove links
-        if (!urlet_menu_choices.link) {
+        if (!urlet_menu_choices.link) { // Remove links if they were not selected
             $("link").remove();
         }
-        // Wait for fetched content
-        setTimeout(function () {
-            // Remove scripts
-            if (!urlet_menu_choices.script) {
+        setTimeout(function () { // Wait for fetched content
+            if (!urlet_menu_choices.script) { // Remove scripts if they were not selected
                 $("script").remove();
             }
-            // Remove style
-            if (!urlet_menu_choices.style) {
+            if (!urlet_menu_choices.style) { // Remove style if they were not selected
                 $("style").remove();
             }
-            // Remove urlet code
-            $("#urlet_modal, #urlet-item").remove();
-            // Convert page
+            $("#urlet_modal, #urlet-item").remove(); // Remove urlet code
             let encoded_page = "";
             if (compr === "base_64") {
                 encoded_page = "0" + window.btoa(encodeURIComponent/*Needed due to invalid character errors*/(document.documentElement.outerHTML));
@@ -398,16 +360,13 @@ function urlet_main(urlet_url, gist_token, pastebin_key) {
             if (compr === "lz_string") {
                 encoded_page = "1" + LZString144.compressToBase64(document.documentElement.outerHTML);
             }
-            // Add menu back to display message
-            urlet_menu(urlet_url, [gist_token, pastebin_key], {});
-            // Show encoded page link in textarea
+            urlet_menu(urlet_url, [gist_token, pastebin_key], {}); // Add menu back to display message
             const $form_contents = $("#urlet_modal").contents();
             const u_link = urlet_url + "#" + encoded_page;
             const u_len = u_link.length;
             $form_contents.find("form").html(form_inner);
             $form_contents.find("#top_legend").text("Link ready");
-            $form_contents.find("#t_area").val(u_link);
-            // Show link length with colors
+            $form_contents.find("#t_area").val(u_link); // Show encoded page link in textarea
             let u_col = "green";
             if (u_len >= 2047) {
                 u_col = "orange";
@@ -421,13 +380,10 @@ function urlet_main(urlet_url, gist_token, pastebin_key) {
             if (u_len >= 64000) {
                 u_col = "red";
             }
-            $form_contents.find("#len").html(`Length: <font color=${u_col}>${u_len}</font>`);
-            // Open button opens link in new window
-            $form_contents.find("#u_open_button").on("click", () => window.open(u_link));
-            // Have page title as default names
-            $form_contents.find("#ufg_desc_input, #ufp_name_input").val(document.title);
-            // If there's a saved token/key, show stars
-            if (gist_token) {
+            $form_contents.find("#len").html(`Length: <font color=${u_col}>${u_len}</font>`); // Show link length with colors
+            $form_contents.find("#u_open_button").on("click", () => window.open(u_link)); // Open button opens link in new window
+            $form_contents.find("#ufg_desc_input, #ufp_name_input").val(document.title); // Have page title as default names
+            if (gist_token) { // If there is a saved token or key, show stars
                 $form_contents.find("#ufg_token_input").attr("readonly", "true");
                 $form_contents.find("#ufg_token_input").val("****************************************");
             } else {
@@ -439,15 +395,12 @@ function urlet_main(urlet_url, gist_token, pastebin_key) {
             } else {
                 $form_contents.find("#ufp_key_input").attr("placeholder", "Please input.");
             }
-            //// Gist options
-            // Gist button
-            $form_contents.find("#u_gist_button").on("click", function () {
+            $form_contents.find("#u_gist_button").on("click", function () { // Gist button
                 const $um_contents_g = $("#urlet_modal").contents();
                 function postGist(t) {
                     const token = "Bearer " + t;
                     $um_contents_g.find("#ufg_link_input").attr("placeholder", "Please wait.");
-                    // Post data
-                    $.ajax({
+                    $.ajax({ // Post data
                         method: "POST",
                         url: "https://api.github.com/gists?scope=gist",
                         headers: {
@@ -464,8 +417,7 @@ function urlet_main(urlet_url, gist_token, pastebin_key) {
                         })
                     }).done((data) => $um_contents_g.find("#ufg_link_input").val(data.html_url)).fail((data) => alert(JSON.stringify(data)));
                 }
-                // Was a token set?
-                if (gist_token !== "") {
+                if (gist_token !== "") { // Check for token
                     postGist(gist_token);
                 } else {
                     const t = $um_contents_g.find("#ufg_token_input").val();
@@ -476,27 +428,22 @@ function urlet_main(urlet_url, gist_token, pastebin_key) {
                     }
                 }
             });
-            // Open button, opens link in new window
-            $form_contents.find("#u_gist_link_button").on("click", function () {
+            $form_contents.find("#u_gist_link_button").on("click", function () { // Open button, opens link in new window
                 const l = $("#urlet_modal").contents().find("#ufg_link_input").val();
                 if (l) {
                     window.open(l);
                 }
             });
-            //// Pastebin options
-            // Pastebin button
-            $form_contents.find("#u_paste_button").on("click", function () {
+            $form_contents.find("#u_paste_button").on("click", function () { // Pastebin button
                 const $um_contents_p = $("#urlet_modal").contents();
                 function postPaste(p_key) {
                     $um_contents_p.find("#ufp_link_input").attr("placeholder", "Please wait.");
-                    // Needed due to CORS error
-                    $.ajaxPrefilter(function (options) {
+                    $.ajaxPrefilter(function (options) { // Needed due to CORS error
                         if (options.crossDomain && $.support.cors) {
                             options.url = "https://cors-anywhere.herokuapp.com/" + options.url;
                         }
                     });
-                    // Post data
-                    $.post("https://pastebin.com/api/api_post.php", {
+                    $.post("https://pastebin.com/api/api_post.php", { // Post data
                         "api_dev_key": p_key,
                         "api_option": "paste",
                         "api_paste_code": u_link,
@@ -506,13 +453,12 @@ function urlet_main(urlet_url, gist_token, pastebin_key) {
                     }).done(function (data) {
                         if (data.includes("pastebin.com")) {
                             $um_contents_p.find("#ufp_link_input").val(data);
-                        } else {
-                            alert(data); // If post limit was reached
+                        } else { // If post limit was reached
+                            alert(data);
                         }
                     }).fail((data) => alert(JSON.stringify(data)));
                 }
-                // Was a key set?
-                if (pastebin_key !== "") {
+                if (pastebin_key !== "") { // Check for key
                     postPaste(pastebin_key);
                 } else {
                     const t = $um_contents_p.find("#ufp_key_input").val();
@@ -523,8 +469,7 @@ function urlet_main(urlet_url, gist_token, pastebin_key) {
                     }
                 }
             });
-            // Open button, opens link in new window
-            $form_contents.find("#u_paste_link_button").on("click", function () {
+            $form_contents.find("#u_paste_link_button").on("click", function () { // Open button; Opens link in new window
                 const l = $("#urlet_modal").contents().find("#ufp_link_input").val();
                 if (l) {
                     window.open(l);
@@ -532,6 +477,5 @@ function urlet_main(urlet_url, gist_token, pastebin_key) {
             });
         }, 900);
     });
-    // Submit button doesn't need to submit anything
-    return false;
+    return false; // Submit button does not need to submit anything
 }

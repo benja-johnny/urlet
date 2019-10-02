@@ -5,16 +5,14 @@
 /*jslint
     browser devel long
 */
-// Updates s.src in the bookmarklet script (link)
-function updateScriptUrl() {
+function updateScriptUrl() { // Updates s.src in the bookmarklet script (link)
     const bookmark_url = window.location.href;
     const script_url = bookmark_url.slice(0, bookmark_url.indexOf("/bookmarklet")) + "/scripts/urlet.js";
     const bookmark = document.getElementById("favlet");
     const bookmark_href = bookmark.getAttribute("href");
     bookmark.setAttribute("href", bookmark_href.slice(0, bookmark_href.indexOf("s.src = '") + 9) + script_url + bookmark_href.slice(bookmark_href.lastIndexOf("';"), bookmark_href.length));
 }
-// Set link default script and title
-function initLink() {
+function initLink() { // Set link default script and title
     const favlet = document.getElementById("favlet");
     favlet.innerHTML = document.title;
     favlet.href = "javascript:(function (){const s = document.createElement('script'), k = ['', ''], d = {}; s.id = 'urlet-item'; s.src = ''; document.getElementsByTagName('head')[0].appendChild(s); s.onload = function () {urlet_menu(s.src, k, d);}})(); void(0);";
@@ -24,26 +22,21 @@ window.onload = function () {
     initLink();
     $(function () {
         const $the_modal = $("#MainModal");
-        // Show setup button
-        $("#buttons").attr("class", "visible");
-        // Show link if modal gets hidden
-        $the_modal.on("hide.bs.modal", function () {
+        $("#buttons").attr("class", "visible"); // Show setup button
+        $the_modal.on("hide.bs.modal", function () { // Show link if modal gets hidden
             const $u_link = $("#urlet-link");
             $u_link.fadeIn(500);
         });
-        // If the modal is shown, hide link
-        $the_modal.on("show.bs.modal", function () {
+        $the_modal.on("show.bs.modal", function () { // If the modal is shown, hide link
             const $u_link = $("#urlet-link");
             $u_link.fadeOut(500);
         });
     });
 };
-// Scroll to the top of the page
-function scrolltoTop() {
+function scrolltoTop() { // Scrolls to the top of the page
     $("#MainModal").animate({scrollTop: 0}, "fast");
 }
-// Function for switching menu pages
-function gotoPage(page_num) {
+function gotoPage(page_num) { // Function for switching menu pages
     $(function () {
         const bookmark_href = document.getElementById("favlet").getAttribute("href");
         const $b_1 = $("#button_1");
@@ -68,8 +61,7 @@ function gotoPage(page_num) {
         }
         if (page_num === 1) {
             scrolltoTop();
-            // Get keys from bookmarklet link, if they were already set
-            const keys_str = bookmark_href.slice(bookmark_href.indexOf("k = [") + 5, bookmark_href.lastIndexOf("], d = {"));
+            const keys_str = bookmark_href.slice(bookmark_href.indexOf("k = [") + 5, bookmark_href.lastIndexOf("], d = {")); // Get keys from bookmarklet link
             let keys = ["", ""];
             if (keys_str !== "") {
                 keys = keys_str.split(", ");
@@ -100,8 +92,7 @@ function gotoPage(page_num) {
 
         if (page_num === 2) {
             scrolltoTop();
-            // Get settings from bookmarklet link, if they were already set
-            const settings_json = JSON.parse(bookmark_href.slice(bookmark_href.indexOf("d = {") + 4, bookmark_href.lastIndexOf("; s.id")));
+            const settings_json = JSON.parse(bookmark_href.slice(bookmark_href.indexOf("d = {") + 4, bookmark_href.lastIndexOf("; s.id"))); // Get settings from bookmarklet link
             $(".modal-body").html(`
                 <div class='text-justify pb-3'>
                     <p>You can have <b>hard coded settings</b> in your bookmarklet.</p>
@@ -158,12 +149,10 @@ function gotoPage(page_num) {
                     <input type='checkbox' id='cb_default_settings' onclick='updateDefaults()'> I want these settings hard coded
                 </p>
             `);
-            // Tick the things that were set
-            // We do this here, because of the "checked" property's issues in different browsers
             if (!$.isEmptyObject(settings_json)) {
                 $.each(settings_json, function (k, v) {
                     if (v) {
-                        $("#cb_" + k).prop("checked", "checked");
+                        $("#cb_" + k).prop("checked", "checked"); // Tick the things that were set; We do this here, because of the "checked" property's issues in different browsers
                     }
                 });
                 $("#cb_default_settings").prop("checked", "checked");
@@ -181,8 +170,7 @@ function gotoPage(page_num) {
                 </div>
                 <p><input type='checkbox' id='cb_include_host' onclick='includeHost()'> Include hostname</p>
             `);
-            // Tick if it was set
-            if ($("#favlet").html().includes(window.location.hostname)) {
+            if ($("#favlet").html().includes(window.location.hostname)) { // Tick if it was ticked already
                 $("#cb_include_host").prop("checked", "checked");
             }
             $b_1.attr("onclick", "gotoPage(2)");
@@ -191,24 +179,20 @@ function gotoPage(page_num) {
         }
     });
 }
-// Resets modal and link to its default state
-function resetModal() {
+function resetModal() { // Resets modal and link to its default state
     $(function () {
         gotoPage(0);
         $("#MainModal").modal("show");
-        // Wait for fadeOut
-        setTimeout(function () {
+        setTimeout(function () { // Wait for fadeOut
             initLink();
         }, 500);
     });
 }
-// Changes the buttons that bring up the menu
-function changeButton() {
+function changeButton() { // Changes the buttons that bring up the menu
     $(function () {
         gotoPage(0);
         $("#MainModal").modal("show");
-        // Wait for fadeOut
-        setTimeout(function () {
+        setTimeout(function () { // Wait for fadeOut
             $("#buttons").html(`
                 <p class="lead">Click one of the buttons below to configure your bookmark!</p>
                 <p>
@@ -219,32 +203,23 @@ function changeButton() {
         }, 500);
     });
 }
-// Add/remove (text) from the bookmark title
-function modifyBookmarkTitle(ar, txt) {
-    // ar = add/remove
-    // txt = text to insert/remove
+function modifyBookmarkTitle(ar, txt) { // Add/remove (text) from the bookmark title; ar = add/remove, txt = text to insert/remove
     let favlet_title = document.getElementById("favlet").innerHTML;
-    // If we want to add text
-    if ((ar === "add") && !favlet_title.includes(txt)) {
+    if ((ar === "add") && !favlet_title.includes(txt)) { // If we want to add text
         const bracket_end = favlet_title.indexOf(")");
-        // If it's not the only text
-        if (bracket_end !== -1) {
+        if (bracket_end !== -1) { // If it is not the only text
             document.getElementById("favlet").innerHTML = favlet_title.slice(0, bracket_end) + ", " + txt + ")";
         } else {
             document.getElementById("favlet").innerHTML = favlet_title + " (" + txt + ")";
         }
     }
-    // If we want to remove text
-    if ((ar === "remove") && favlet_title.includes(txt)) {
-        // If it's the only text
-        if (favlet_title.slice(favlet_title.indexOf("(") + 1, favlet_title.lastIndexOf(")")) === txt) {
+    if ((ar === "remove") && favlet_title.includes(txt)) { // If we want to remove text
+        if (favlet_title.slice(favlet_title.indexOf("(") + 1, favlet_title.lastIndexOf(")")) === txt) { // If it is the only text
             document.getElementById("favlet").innerHTML = document.title;
-        } else {
-            // Remove text
+        } else { // Remove text, clean up unnecessary commas
             const txt_i = favlet_title.indexOf(txt);
             const ft_length = favlet_title.length;
             document.getElementById("favlet").innerHTML = favlet_title.slice(0, txt_i) + favlet_title.slice(txt_i + txt.length, ft_length);
-            // Clean up unnecessary commas
             favlet_title = document.getElementById("favlet").innerHTML;
             const i_1 = favlet_title.indexOf(", , ");
             const i_2 = favlet_title.indexOf("(,");
@@ -261,15 +236,13 @@ function modifyBookmarkTitle(ar, txt) {
         }
     }
 }
-// Updates defaults JSON (d) in the bookmarklet script (link)
-function updateDefaults() {
+function updateDefaults() { // Updates defaults JSON (d) in the bookmarklet script (link)
     function replaceDefaults(o) {
         const bookmark = document.getElementById("favlet");
         const bookmark_href = bookmark.getAttribute("href");
         bookmark.setAttribute("href", bookmark_href.slice(0, bookmark_href.indexOf("d = {") + 4) + JSON.stringify(o) + bookmark_href.slice(bookmark_href.lastIndexOf("}; s.id") + 1, bookmark_href.length));
     }
-    // Only update if the checkbox is checked
-    if (document.getElementById("cb_default_settings").checked) {
+    if (document.getElementById("cb_default_settings").checked) { // Only update if the checkbox is checked
         replaceDefaults({
             "lz_string": document.getElementById("cb_lz_string").checked,
             "base_64": document.getElementById("cb_base_64").checked,
@@ -286,38 +259,32 @@ function updateDefaults() {
         modifyBookmarkTitle("remove", "options");
     }
 }
-// Updates the keys array (k) in the bookmarklet script (link)
-function updateKeys() {
+function updateKeys() { // Updates the keys array (k) in the bookmarklet script (link)
     const bookmark = document.getElementById("favlet");
     const bookmark_href = bookmark.getAttribute("href");
     bookmark.setAttribute("href", bookmark_href.slice(0, bookmark_href.indexOf("k = [") + 5) + "'" + document.getElementsByTagName("input")[0].value + "', '" + document.getElementsByTagName("input")[1].value + "'" + bookmark_href.slice(bookmark_href.lastIndexOf("], d = {"), bookmark_href.length));
 }
-// Selects all checkboxes
-function u_select_all(source) {
+function u_select_all(source) { // Selects all checkboxes
     const u_checkboxes = document.getElementsByName("urlet_checkbox");
     u_checkboxes.forEach(function (ignore, i) {
         u_checkboxes[i].checked = source.checked;
     });
     updateDefaults();
 }
-// Triggered by defocusing Gist token and Pastebin key input
-function checkLength(i) {
+function checkLength(i) { // Triggered by defocusing Gist token and Pastebin key input
     const a = document.getElementsByTagName("input")[i];
-    // Value can only be 40/32 characters long or empty
-    if (((i === 0) && ((a.value.length !== 40) && (a.value.length !== 0))) || ((i === 1) && ((a.value.length !== 32) && (a.value.length !== 0)))) {
+    if (((i === 0) && ((a.value.length !== 40) && (a.value.length !== 0))) || ((i === 1) && ((a.value.length !== 32) && (a.value.length !== 0)))) { // Value can only be 40/32 characters long or empty
         alert("Please input a valid token.");
         a.value = "";
         updateKeys();
     } else {
         modifyBookmarkTitle("add", "keys");
     }
-    // If there's no accepted key, remove (keys)
-    if ((document.getElementsByTagName("input")[0].value === "") && (document.getElementsByTagName("input")[1].value === "")) {
+    if ((document.getElementsByTagName("input")[0].value === "") && (document.getElementsByTagName("input")[1].value === "")) { // If there is no accepted key, remove (keys)
         modifyBookmarkTitle("remove", "keys");
     }
 }
-// Puts the hostname in the bookmark title
-function includeHost() {
+function includeHost() { // Puts the hostname in the bookmark title
     const h_name = window.location.hostname;
     if (document.getElementById("cb_include_host").checked) {
         modifyBookmarkTitle("add", h_name);
