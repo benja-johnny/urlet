@@ -44,8 +44,8 @@ function gotoPage(page_num) { // Function for switching menu pages
         if (page_num === 0) {
             $("#MainModalTitle").html("Urlet setup");
             $(".modal-body").html(`
-                <p class='lead pb-3'>Welcome!</p>
-                <div class='text-justify pb-3'>
+                <p class="lead pb-3">Welcome!</p>
+                <div class="text-justify pb-3">
                     <p>This setup process will hard code settings into your bookmark for a better user experience.</p>
                     <p><b>Hard coding</b> means embedding data directly into the source code of a program.</p>
                     <p>Click <b>Next</b> to configure your bookmarklet.</p>
@@ -67,86 +67,85 @@ function gotoPage(page_num) { // Function for switching menu pages
                 keys = keys_str.split(", ");
             }
             $(".modal-body").html(`
-                <div class='text-justify pb-3'>
+                <div class="text-justify pb-3">
                     <p>You will need <b>API keys</b> to enable instant sharing to Pastebin and GitHub.</p>
                     <p>An <b>a</b>pplication <b>p</b>rogramming <b>i</b>nterface <b>key</b> is a unique identifier used for authentication. It enables the bookmarklet to post to your pastebin.com and github.com accounts on your behalf.</p>
                     <p>You can have them <b>hard coded</b> if you fill the fields below, or you can provide them right before sharing a link.</p>
                     <p>The keys will not be stored online.</p>
                 </div>
-                <div class='pb-3' onkeyup='return updateKeys()'>
+                <div class="pb-3" onkeyup="return updateKeys()">
                 <p>Gist token:<br>
-                <input type='text' style='width:100%' placeholder='Must be 40 characters long.' onblur='checkLength(0)' value=${keys[0]}></p>
+                <input type="text" style="width: 100%;" placeholder="Must be 40 characters long." onfocus="$('#button_1, #button_2').prop('disabled', 'true')" onblur="checkLength(0)" value=${keys[0]}></p>
                 <p>Pastebin key:<br>
-                <input type='text' style='width:100%' placeholder='Must be 32 characters long.' onblur='checkLength(1)' value=${keys[1]}></p>
+                <input type="text" style="width: 100%;" placeholder="Must be 32 characters long." onfocus="$('#button_1, #button_2').prop('disabled', 'true')" onblur="checkLength(1)" value=${keys[1]}></p>
                 </div>
                 <p>To get a Gist token, go here:<br>
-                <a href='https://github.com/settings/tokens'>https://github.com/settings/tokens</a></p>
+                <a href="https://github.com/settings/tokens">https://github.com/settings/tokens</a></p>
                 <p>To get your Pastebin Developer API Key, go here:<br>
-                <a href='https://pastebin.com/api'>https://pastebin.com/api</a></p>
+                <a href="https://pastebin.com/api">https://pastebin.com/api</a></p>
             `);
             $b_1.attr("onclick", "gotoPage(0)");
             $b_1.html("Back");
             $b_1.removeAttr("data-dismiss");
             $b_2.attr("onclick", "gotoPage(2)");
         }
-
         if (page_num === 2) {
             scrolltoTop();
             const settings_json = JSON.parse(bookmark_href.slice(bookmark_href.indexOf("d = {") + 4, bookmark_href.lastIndexOf("; s.id"))); // Get settings from bookmarklet link
             $(".modal-body").html(`
-                <div class='text-justify pb-3'>
+                <div class="text-justify pb-3">
                     <p>You can have <b>hard coded settings</b> in your bookmarklet.</p>
                     <p>If you tick the box <i>&quot;I want these settings hard coded&quot;</i>, your bookmarklet will not ask for settings when you click it, and it will always use these settings.</p>
                 </div>
-                <table style='width:100%;padding:5px;text-align:left'>
+                <table style="width: 100%; padding: 5px; text-align: left;">
                     <tr>
-                        <th style='padding-bottom:10px'>Include</th>
-                        <th style='padding-bottom:10px'>Compression</th>
+                        <th style="padding-bottom: 10px;">Include</th>
+                        <th style="padding-bottom: 10px;">Compression</th>
                     </tr>
                     <tr>
                         <td>
-                            <input type='checkbox' name='urlet_checkbox' id='cb_style' onclick='updateDefaults()'> Style
+                            <input type="checkbox" name="urlet_checkbox" id="cb_style" onclick="updateDefaults()"> Style
                         </td>
                         <td>
-                            <input type='radio' name='compression' id='cb_lz_string'  checked='checked' onclick='updateDefaults()'> lz-string
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input type='checkbox' name='urlet_checkbox' id='cb_script' onclick='updateDefaults()'> Script
-                        </td>
-                        <td>
-                            <input type='radio' name='compression' id='cb_base_64' onclick='updateDefaults()'> base-64
+                            <input type="radio" name="compression" id="cb_lz_string"  checked="checked" onclick="updateDefaults()"> lz-string
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <input type='checkbox' name='urlet_checkbox' id='cb_link' onclick='updateDefaults()'> Link
+                            <input type="checkbox" name="urlet_checkbox" id="cb_script" onclick="updateDefaults()"> Script
+                        </td>
+                        <td>
+                            <input type="radio" name="compression" id="cb_base_64" onclick="updateDefaults()"> base-64
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <input type='checkbox' name='urlet_checkbox' id='cb_meta' onclick='updateDefaults()'> Meta
+                            <input type="checkbox" name="urlet_checkbox" id="cb_link" onclick="updateDefaults()"> Link
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <input type='checkbox' name='urlet_checkbox' id='cb_template' onclick='updateDefaults()'> Template
+                            <input type="checkbox" name="urlet_checkbox" id="cb_meta" onclick="updateDefaults()"> Meta
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <input type='checkbox' name='urlet_checkbox' id='cb_comment' onclick='updateDefaults()'> Comment
+                            <input type="checkbox" name="urlet_checkbox" id="cb_template" onclick="updateDefaults()"> Template
                         </td>
                     </tr>
                     <tr>
-                        <td style='padding-top:10px'>
-                            <input type='checkbox' onClick='u_select_all(this)'> Select all
+                        <td>
+                            <input type="checkbox" name="urlet_checkbox" id="cb_comment" onclick="updateDefaults()"> Comment
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-top: 10px;">
+                            <input type="checkbox" onclick="u_select_all(this)"> Select all
                         </td>
                     </tr>
                 </table>
-                <p style='margin-top:20px'>
-                    <input type='checkbox' id='cb_default_settings' onclick='updateDefaults()'> I want these settings hard coded
+                <p style="margin-top: 20px;">
+                    <input type="checkbox" id="cb_default_settings" onclick="updateDefaults()"> I want these settings hard coded
                 </p>
             `);
             if (!$.isEmptyObject(settings_json)) {
@@ -164,11 +163,11 @@ function gotoPage(page_num) { // Function for switching menu pages
         }
         if (page_num === 3) {
             $(".modal-body").html(`
-                <div class='text-justify pb-3'>
+                <div class="text-justify pb-3">
                     <p>To easily distinguish between different Urlet bookmarks, you can include the <b>hostname</b> in the bookmark title.</p>
                     <p>The current hostname is <i>&quot;${window.location.hostname}&quot;</i>.</p>
                 </div>
-                <p><input type='checkbox' id='cb_include_host' onclick='includeHost()'> Include hostname</p>
+                <p><input type="checkbox" id="cb_include_host" onclick="includeHost()"> Include hostname</p>
             `);
             if ($("#favlet").html().includes(window.location.hostname)) { // Tick if it was ticked already
                 $("#cb_include_host").prop("checked", "checked");
@@ -283,6 +282,9 @@ function checkLength(i) { // Triggered by defocusing Gist token and Pastebin key
     if ((document.getElementsByTagName("input")[0].value === "") && (document.getElementsByTagName("input")[1].value === "")) { // If there is no accepted key, remove (keys)
         modifyBookmarkTitle("remove", "keys");
     }
+    setTimeout(function () { // Wait for key validation
+        $("#button_1, #button_2").removeAttr("disabled"); // Enable buttons
+    }, 100);
 }
 function includeHost() { // Puts the hostname in the bookmark title
     const h_name = window.location.hostname;

@@ -1,27 +1,28 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<!-- Load lz-string compressor -->
-<script src="./scripts/lz-string-1.4.4.js" type="text/javascript"></script>
-<!-- Load URL -->
-<script>
-const wlh = window.location.hash;
-if (wlh) { // Try to get page data from the URL if possible
-    const compr_t = wlh.charAt(1); // Get compression type
-    const wlhs = window.location.hash.slice(2); // Get data part of URL
-    if (compr_t === 0) {
-        document.write(decodeURIComponent(window.atob(wlhs))); // Decode and print
-    }
-    if (compr_t === 1) {
-        document.write(LZString144.decompressFromBase64(wlhs)); // Decompress and print
-    }
-} else { // Redirect to the bookmarklet download page
-    window.location.replace("./bookmarklet");
-}
-</script>
-</head>
-<body>
-<noscript>JavaScript is required to convert the URL into a usable web page.</noscript>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <!-- Load lz-string compressor -->
+        <script src="./scripts/lz-string-1.4.4.js" type="text/javascript"></script>
+        <!-- Load URL -->
+        <script>
+            const wlh = window.location.hash;
+            if (wlh) { // Try to get page data from the URL if possible
+                const compr_t = wlh.charAt(1); // Get compression type
+                const wlhs = window.location.hash.slice(2); // Get data part of URL
+                if (compr_t === 0) {
+                    document.write(decodeURIComponent(window.atob(wlhs))); // Decode and print
+                }
+                if (compr_t === 1) {
+                    document.write(LZString144.decompressFromBase64(wlhs)); // Decompress and print
+                }
+            } else { // Redirect to the bookmarklet download page
+                window.location.replace("./bookmarklet");
+            }
+        </script>
+        <title>Urlet</title>
+    </head>
+    <body>
+        <noscript>JavaScript is required to convert the URL into a usable web page.</noscript>
+    </body>
 </html>
