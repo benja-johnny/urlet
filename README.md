@@ -28,13 +28,13 @@ Share the contents of a webpage via URL.
 
 ## Thanks to
 
+- [Bootstrap team](https://github.com/orgs/twbs/people) ([Bootstrap](https://getbootstrap.com/))
+- [Douglas Crockford](https://github.com/douglascrockford) ([JSLint](https://github.com/douglascrockford/JSLint))
+- [GitHub](https://github.com/) ([Gist](https://gist.github.com/))
+- [jQuery team](https://jquery.org/team/) ([jQuery](https://jquery.com/))
+- [jstrieb](https://github.com/jstrieb) ([urlpages](https://github.com/jstrieb/urlpages))
 - [pieroxy](https://github.com/pieroxy) ([lz-string](https://github.com/pieroxy/lz-string))
 - [Rob Wu](https://github.com/Rob--W) ([cors-anywhere](https://github.com/Rob--W/cors-anywhere))
-- [Douglas Crockford](https://github.com/douglascrockford) ([JSLint](https://github.com/douglascrockford/JSLint))
-- [jstrieb](https://github.com/jstrieb) ([urlpages](https://github.com/jstrieb/urlpages))
-- [jQuery team](https://jquery.org/team/) ([jQuery](https://jquery.com/))
-- [Bootstrap team](https://github.com/orgs/twbs/people) ([Bootstrap](https://getbootstrap.com/))
-- [GitHub](https://github.com/) ([Gist](https://gist.github.com/))
 
 
 ## Disclaimer
