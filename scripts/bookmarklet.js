@@ -71,6 +71,7 @@ function gotoPage(page_num) { // Function for switching menu pages
                     <p>You will need <b>API keys</b> to enable instant sharing to Pastebin and GitHub.</p>
                     <p>An <b>a</b>pplication <b>p</b>rogramming <b>i</b>nterface <b>key</b> is a unique identifier used for authentication. It enables the bookmarklet to post to your pastebin.com and github.com accounts on your behalf.</p>
                     <p>You can have them <b>hard coded</b> if you fill the fields below, or you can provide them right before sharing a link.</p>
+                    <p>Using Pastebin is recommended if you post less than 12 links per 24 hours.</p>
                     <p>The keys will not be stored online.</p>
                 </div>
                 <div class="pb-3" onkeyup="return updateKeys()">

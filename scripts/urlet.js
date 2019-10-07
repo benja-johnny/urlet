@@ -16,8 +16,22 @@ function gotoSharedURL(urlet_url, loc) { // Opens link inside a page element
         } else {
             alert("Link not found.");
         }
-        $("#urlet_modal, #urlet-item").remove();
+        window.location.reload(false);
     });
+}
+function addjQuery() { // Removes jQuery if the page already has it and adds this one
+    const s = document.getElementsByTagName("script");
+    const x = Array.from(s).findIndex((e) => e.src.includes("jquery"));
+    if (x !== -1) {
+        s.item(x).remove();
+    }
+    const j = document.createElement("script");
+    j.setAttribute("src", "https://code.jquery.com/jquery-3.4.1.min.js");
+    j.setAttribute("integrity", "sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=");
+    j.setAttribute("crossorigin", "anonymous");
+    j.setAttribute("id", "urlet-item");
+    document.getElementsByTagName("body").item(0).appendChild(j);
+    return j; // Return jQuery Element
 }
 function urlet_menu(script_url, keys, defaults) { // Adds the modal menu and scripts to the page
     function parseURL() { // Did we get the script URL?
@@ -34,18 +48,11 @@ function urlet_menu(script_url, keys, defaults) { // Adds the modal menu and scr
         $("#urlet_modal, #urlet-item").remove();
         return;
     }
-    const jq = document.createElement("script");
-    jq.setAttribute("src", "https://code.jquery.com/jquery-3.4.1.min.js");
-    jq.setAttribute("integrity", "sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=");
-    jq.setAttribute("crossorigin", "anonymous");
-    jq.setAttribute("id", "urlet-item");
-    document.getElementsByTagName("head")[0].appendChild(jq); // Add jQuery
-    /*if (loc_h.includes("gist.github.com/")) { // If we are on gist.github.com, find and go to URL; Does not work due to bookmarklets being blocked on GitHub
-        jq.onload = () => gotoSharedURL(urlet_url, "#file-urlet-txt-LC1");
-        return;
-    }*/
+    const jq = addjQuery();
     if (loc_h.includes("pastebin.com/")) { // If we are on pastebin.com, find and go to URL
-        jq.onload = () => gotoSharedURL(urlet_url, "#paste_code");
+        jq.onload = function () {
+            gotoSharedURL(urlet_url, "#paste_code");
+        };
         return;
     }
     const modal_style = document.createElement("style");
@@ -65,11 +72,11 @@ function urlet_menu(script_url, keys, defaults) { // Adds the modal menu and scr
         }
     `;
     modal_style.setAttribute("id", "urlet-item");
-    document.getElementsByTagName("head")[0].appendChild(modal_style); // Add modal style
+    document.getElementsByTagName("head").item(0).appendChild(modal_style); // Add modal style
     const urlet_modal = document.createElement("iframe");
     urlet_modal.setAttribute("id", "urlet_modal");
     urlet_modal.setAttribute("class", "urlet-modal");
-    document.getElementsByTagName("body")[0].appendChild(urlet_modal); // Add iframe
+    document.getElementsByTagName("body").item(0).appendChild(urlet_modal); // Add iframe
     urlet_modal.style.display = "block";
     const iframe_style = document.createElement("style");
     iframe_style.innerHTML = `
@@ -98,7 +105,7 @@ function urlet_menu(script_url, keys, defaults) { // Adds the modal menu and scr
         }
     `;
     iframe_style.setAttribute("id", "urlet-item");
-    urlet_modal.contentDocument.getElementsByTagName("head")[0].appendChild(iframe_style); // Add style to iframe contents
+    urlet_modal.contentDocument.getElementsByTagName("head").item(0).appendChild(iframe_style); // Add style to iframe contents
     const modal_content = document.createElement("div");
     modal_content.setAttribute("class", "urlet-modal-content");
     modal_content.innerHTML = `
@@ -159,20 +166,14 @@ function urlet_menu(script_url, keys, defaults) { // Adds the modal menu and scr
             </fieldset>
         </form>
     `;
-    urlet_modal.contentDocument.getElementsByTagName("body")[0].appendChild(modal_content); // Create form in iframe
+    urlet_modal.contentDocument.getElementsByTagName("body").item(0).appendChild(modal_content); // Create form in iframe
     const modal_script = document.createElement("script");
     modal_script.innerHTML = `
         const urlet_modal = window.parent.document.getElementById("urlet_modal");
-        const urlet_span_close = document.getElementsByClassName("urlet-close")[0];
+        const urlet_span_close = document.getElementsByClassName("urlet-close").item(0);
         urlet_span_close.onclick = function () {
             urlet_modal.style.display = "none";
             window.parent.location.reload(false);
-        };
-        window.parent.onclick = function (event) {
-            if (event.target === urlet_modal) {
-                urlet_modal.style.display = "none";
-                window.parent.location.reload(false);
-            }
         };
         function u_select_all(source) {
             const u_checkboxes = document.getElementsByName("urlet_checkbox");
@@ -182,19 +183,19 @@ function urlet_menu(script_url, keys, defaults) { // Adds the modal menu and scr
         }
     `;
     modal_script.setAttribute("id", "urlet-item");
-    urlet_modal.contentDocument.getElementsByTagName("head")[0].appendChild(modal_script); // Add menu script to iframe
+    urlet_modal.contentDocument.getElementsByTagName("head").item(0).appendChild(modal_script); // Add menu script to iframe
     urlet_modal.onload = function () { // Add elements to iframe after it has loaded (needed for Firefox); Might cause trouble later
-        urlet_modal.contentDocument.getElementsByTagName("head")[0].appendChild(iframe_style);
-        urlet_modal.contentDocument.getElementsByTagName("body")[0].appendChild(modal_content);
-        urlet_modal.contentDocument.getElementsByTagName("head")[0].appendChild(modal_script);
+        urlet_modal.contentDocument.getElementsByTagName("head").item(0).appendChild(iframe_style);
+        urlet_modal.contentDocument.getElementsByTagName("body").item(0).appendChild(modal_content);
+        urlet_modal.contentDocument.getElementsByTagName("head").item(0).appendChild(modal_script);
     };
     const lz_string = document.createElement("script");
     lz_string.setAttribute("src", urlet_url + "scripts/lz-string-1.4.4.js");
     lz_string.setAttribute("id", "urlet-item");
-    document.getElementsByTagName("head")[0].appendChild(lz_string); // Add lz-string-1.4.4
+    document.getElementsByTagName("head").item(0).appendChild(lz_string); // Add lz-string-1.4.4
     jq.onload = function () {
-        if (!$.isEmptyObject(defaults)) { // If there were defaults set (defaults != {}), use those settings
-            $(function () {
+        $(function () {
+            if (!$.isEmptyObject(defaults)) { // If there were defaults set (defaults != {}), use those settings
                 const m_contents = $("#urlet_modal").contents();
                 m_contents.find("#c_b_style").prop("checked", false); // Remove the check from Style
                 $.each(defaults, function (k, v) { // Check boxes of default options
@@ -203,11 +204,11 @@ function urlet_menu(script_url, keys, defaults) { // Adds the modal menu and scr
                     }
                 });
                 m_contents.find("input[type=submit]").click(); // Click Submit
-            });
-        }
+            }
+        });
     };
 }
-function urlet_main(urlet_url, gist_token, pastebin_key) { // Function triggered by submit button
+function urlet_main(urlet_url, gist_token, pastebin_key) { // Triggered by submit button
     $(function () { // Execute after page has loaded
         const $modal_contents = $("#urlet_modal").contents();
         function getChoices() { // Get menu choices
